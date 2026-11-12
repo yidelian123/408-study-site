@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考研政治 · 近现代史纲与理论时间轴</title>
+<style>
+  :root{
+    --bg:#fdf7ee;--card:#fffdf9;--ink:#3b332b;--soft:#756556;--faint:#9c8a78;
+    --line:#eadcc9;--track:#e6d5c0;
+    --red:#b23a2e;--ochre:#c07a2c;--green:#4f7a5e;--indigo:#4a6b8a;--gold:#b8912f;
+    --accent:#b23a2e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle,rgba(190,160,130,.075) 1px,transparent 1px);
+    background-size:26px 26px;
+  }
+  .serif{font-family:Georgia,"Songti SC","SimSun",serif}
+
+  /* ---------- 顶部 ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:52px 24px 34px;text-align:center;
+    background:linear-gradient(170deg,#fdf3e6,#fdf7ee 70%);
+    border-bottom:1px solid var(--line);
+  }
+  .hero::before,.hero::after{
+    content:"";position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;
+  }
+  .hero::before{width:420px;height:420px;left:-120px;top:-200px;background:#f9d6bd;opacity:.55}
+  .hero::after{width:380px;height:380px;right:-120px;top:-160px;background:#f6dfc0;opacity:.5}
+  .hero>*{position:relative}
+  .kicker{font-size:12px;letter-spacing:.28em;color:var(--faint);margin-bottom:16px}
+  .hero h1{
+    font-size:clamp(28px,4.4vw,44px);font-weight:700;letter-spacing:.03em;line-height:1.35;
+    color:#4a3529;
+  }
+  .hero h1 span{color:var(--red)}
+  .hero p{margin-top:14px;font-size:13.5px;color:var(--soft);line-height:1.9;letter-spacing:.02em}
+  .stats{
+    margin-top:24px;display:flex;gap:26px;justify-content:center;flex-wrap:wrap;
+    font-size:12px;color:var(--faint);letter-spacing:.05em;
+  }
+  .stats b{font-family:Georgia,serif;font-size:19px;color:var(--red);font-weight:700;margin-right:5px}
+
+  /* ---------- Tab ---------- */
+  .tabs{
+    position:sticky;top:0;z-index:20;
+    display:flex;justify-content:center;gap:6px;
+    padding:12px 16px;background:rgba(253,247,238,.94);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  }
+  .tab{
+    cursor:pointer;border:1px solid transparent;background:none;font-family:inherit;
+    font-size:13.5px;letter-spacing:.06em;color:var(--soft);
+    padding:10px 22px;border-radius:999px;transition:.25s;
+  }
+  .tab:hover{color:var(--red);background:#fffaf2}
+  .tab.on{color:#fff;background:var(--red);box-shadow:0 6px 16px rgba(178,58,46,.22)}
+
+  /* ---------- 工具栏 ---------- */
+  .toolbar{
+    max-width:1180px;margin:26px auto 0;padding:0 22px;
+    display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  }
+  .search{
+    flex:1;min-width:200px;position:relative;
+  }
+  .search input{
+    width:100%;padding:12px 16px 12px 38px;font-family:inherit;font-size:13.5px;
+    color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;
+    outline:none;transition:border-color .25s,box-shadow .25s;
+  }
+  .search input:focus{border-color:#d9b9a4;box-shadow:0 0 0 3px rgba(178,58,46,.07)}
+  .search::before{
+    content:"⌕";position:absolute;left:15px;top:50%;transform:translateY(-52%);
+    font-size:19px;color:var(--faint);
+  }
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{
+    cursor:pointer;border:1px solid var(--line);background:var(--card);
+    font-family:inherit;font-size:12px;color:var(--soft);
+    padding:9px 15px;border-radius:999px;transition:.22s;
+  }
+  .chip:hover{border-color:#d9b9a4}
+  .chip.on{color:#fff;border-color:transparent}
+  .chip.on[data-k=all]{background:var(--red)}
+  .chip.on[data-k=event]{background:var(--red)}
+  .chip.on[data-k=meeting]{background:var(--ochre)}
+  .chip.on[data-k=work]{background:var(--green)}
+  .chip.on[data-k=theory]{background:var(--indigo)}
+  .chip.on[data-k=concept]{background:var(--gold)}
+  .ghost-btn{
+    cursor:pointer;border:1px solid var(--line);background:var(--card);
+    font-family:inherit;font-size:12px;color:var(--soft);
+    padding:9px 16px;border-radius:999px;transition:.22s;
+  }
+  .ghost-btn:hover{border-color:#d9b9a4;color:var(--red)}
+
+  /* ---------- 主体 ---------- */
+  .layout{
+    max-width:1180px;margin:0 auto;padding:28px 22px 90px;
+    display:grid;grid-template-columns:226px 1fr;gap:34px;
+    align-items:start;
+  }
+  .toc{position:sticky;top:76px}
+  .toc h4{
+    font-size:11px;letter-spacing:.22em;color:var(--faint);font-weight:600;
+    padding-bottom:12px;margin-bottom:8px;border-bottom:1px solid var(--line);
+  }
+  .toc a{
+    display:block;text-decoration:none;color:var(--soft);
+    font-size:12.5px;line-height:1.55;padding:8px 10px;border-radius:8px;
+    border-left:2px solid transparent;transition:.22s;
+  }
+  .toc a span{display:block;font-family:Georgia,serif;font-size:10.5px;color:var(--faint);letter-spacing:.06em}
+  .toc a:hover{background:#fdf1e3;color:var(--red)}
+  .toc a.on{border-left-color:var(--red);background:#fbf0e2;color:var(--red);font-weight:600}
+  .legend{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+  .legend div{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--faint);margin-bottom:8px}
+  .legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+  /* 时间轴 */
+  .phase{margin-bottom:52px;scroll-margin-top:86px}
+  .phase-head{margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .phase-num{font-family:Georgia,serif;font-size:11px;letter-spacing:.24em;color:var(--red)}
+  .phase-title{
+    font-size:clamp(20px,2.8vw,26px);font-weight:700;margin-top:8px;letter-spacing:.02em;
+  }
+  .phase-title em{
+    font-style:normal;font-family:Georgia,serif;font-size:15px;color:var(--faint);
+    margin-left:12px;font-weight:400;letter-spacing:.02em;
+  }
+  .phase-desc{margin-top:10px;font-size:12.8px;color:var(--soft);line-height:1.9}
+
+  .track{position:relative;padding-left:34px;margin-left:6px;border-left:2px solid var(--track)}
+  .node{position:relative;margin-bottom:12px}
+  .node::before{
+    content:"";position:absolute;left:-42px;top:19px;
+    width:11px;height:11px;border-radius:50%;
+    background:var(--c);border:3px solid var(--bg);
+    box-shadow:0 0 0 2px var(--c);transition:transform .25s;
+  }
+  .node.open::before{transform:scale(1.3)}
+  .node-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 2px 7px rgba(150,110,80,.04),0 10px 24px rgba(150,110,80,.045);
+    overflow:hidden;transition:box-shadow .28s,transform .28s,border-color .28s;
+  }
+  .node-card:hover{box-shadow:0 4px 12px rgba(150,110,80,.07),0 16px 34px rgba(150,110,80,.09)}
+  .node.open .node-card{border-color:#e2c7b2}
+  .node-head{
+    cursor:pointer;padding:15px 18px;display:flex;gap:14px;align-items:flex-start;
+    user-select:none;
+  }
+  .node-year{
+    flex:0 0 92px;font-family:Georgia,serif;font-size:14px;font-weight:700;
+    color:var(--c);letter-spacing:.01em;padding-top:2px;line-height:1.4;
+  }
+  .node-main{flex:1;min-width:0}
+  .node-title{
+    font-size:15px;font-weight:600;color:var(--ink);line-height:1.6;
+    display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  }
+  .badge{
+    font-size:10px;font-weight:600;letter-spacing:.08em;color:#fff;
+    padding:3px 8px;border-radius:999px;background:var(--c);white-space:nowrap;
+  }
+  .node-sum{margin-top:6px;font-size:12.6px;color:var(--soft);line-height:1.8}
+  .chev{
+    flex:0 0 auto;color:var(--faint);font-size:12px;margin-top:4px;
+    transition:transform .28s;
+  }
+  .node.open .chev{transform:rotate(90deg);color:var(--c)}
+  .node-detail{display:none;padding:0 18px 18px 124px}
+  .node.open .node-detail{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+  .node-detail ul{list-style:none;border-top:1px dashed var(--line);padding-top:13px}
+  .node-detail li{
+    position:relative;padding-left:17px;margin-bottom:9px;
+    font-size:12.8px;line-height:1.9;color:var(--soft);
+  }
+  .node-detail li::before{
+    content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;
+    border-radius:50%;background:var(--c);opacity:.6;
+  }
+  .node-detail li strong{color:var(--ink);font-weight:600}
+  .tip{
+    margin-top:12px;padding:11px 14px;border-radius:10px;
+    background:#fbf1e3;border-left:3px solid var(--gold);
+    font-size:12px;line-height:1.85;color:#8a6a3d;
+  }
+  .tip b{color:var(--gold);font-weight:700;margin-right:6px}
+
+  .empty{text-align:center;padding:60px 20px;color:var(--faint);font-size:13px}
+
+  /* ---------- 理论体系 ---------- */
+  .view{display:none}
+  .view.on{display:block;animation:fade .35s ease}
+  .intro{
+    max-width:1180px;margin:28px auto 0;padding:0 22px;
+  }
+  .intro-box{
+    background:linear-gradient(150deg,#fff8ec,#fffdf9);
+    border:1px solid var(--line);border-radius:18px;padding:26px 30px;
+    box-shadow:0 6px 20px rgba(150,110,80,.05);
+  }
+  .intro-box h3{font-size:18px;color:var(--red);letter-spacing:.03em}
+  .intro-box p{margin-top:12px;font-size:13px;line-height:2;color:var(--soft)}
+  .flow{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .flow div{
+    flex:1;min-width:190px;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:15px 16px;font-size:12.5px;color:var(--soft);line-height:1.8;
+  }
+  .flow b{display:block;font-family:Georgia,serif;font-size:11px;color:var(--red);letter-spacing:.1em;margin-bottom:7px}
+  .flow strong{color:var(--ink)}
+
+  .theory-grid{
+    max-width:1180px;margin:24px auto 90px;padding:0 22px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;
+  }
+  .tcard{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:26px 24px;box-shadow:0 2px 8px rgba(150,110,80,.04),0 12px 28px rgba(150,110,80,.05);
+    transition:transform .3s,box-shadow .3s;
+  }
+  .tcard:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(150,110,80,.08),0 22px 44px rgba(150,110,80,.1)}
+  .tcard .ord{font-family:Georgia,serif;font-size:11px;letter-spacing:.2em;color:var(--red)}
+  .tcard h3{font-size:19px;margin-top:9px;letter-spacing:.02em}
+  .tcard .meta{margin-top:9px;font-size:11.5px;color:var(--faint);line-height:1.8}
+  .trow{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+  .trow dt{font-size:11px;letter-spacing:.14em;color:var(--red);font-weight:700;margin-bottom:7px}
+  .trow dd{font-size:12.8px;line-height:1.95;color:var(--soft)}
+  .trow dd strong{color:var(--ink);font-weight:600}
+  .trow ul{list-style:none;margin-top:4px}
+  .trow ul li{position:relative;padding-left:14px;margin-bottom:5px;font-size:12.6px;line-height:1.8;color:var(--soft)}
+  .trow ul li::before{content:"·";position:absolute;left:2px;color:var(--red);font-weight:700}
+
+  /* ---------- 考点速查 ---------- */
+  .quick{max-width:1180px;margin:26px auto 90px;padding:0 22px}
+  .qgroup{margin-bottom:28px}
+  .qgroup h3{
+    font-size:17px;color:var(--red);padding-bottom:12px;margin-bottom:14px;
+    border-bottom:1px solid var(--line);letter-spacing:.02em;
+  }
+  .qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+  .qitem{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+  }
+  .qitem h4{font-size:14px;color:var(--ink);margin-bottom:10px}
+  .qitem p,.qitem ol{font-size:12.6px;line-height:1.95;color:var(--soft)}
+  .qitem ol{padding-left:18px}
+  .qitem ol li{margin-bottom:4px}
+  .qitem strong{color:var(--red);font-weight:600}
+
+  footer.foot{
+    text-align:center;padding:28px 20px 40px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--faint);line-height:2;
+  }
+  footer.foot a{color:var(--red);text-decoration:none}
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;gap:0}
+    .toc{display:none}
+    .node-detail{padding-left:18px}
+    .node-year{flex-basis:76px;font-size:12.5px}
+  }
+  @media (max-width:560px){
+    .hero{padding:38px 18px 26px}
+    .tabs{padding:9px 8px;gap:2px}
+    .tab{padding:9px 13px;font-size:12px}
+    .toolbar{padding:0 14px;gap:9px}
+    .layout,.intro,.theory-grid,.quick{padding-left:14px;padding-right:14px}
+    .track{padding-left:24px;margin-left:2px}
+    .node::before{left:-32px;width:9px;height:9px}
+    .node-head{padding:13px 13px;gap:9px}
+    .node-year{flex-basis:54px;font-size:11.5px}
+    .node-title{font-size:14px}
+    .node-detail{padding:0 13px 15px}
+    .intro-box{padding:20px}
+  }
+  @media print{
+    .tabs,.toolbar,.toc,.ghost-btn{display:none}
+    .node-detail{display:block!important}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">考研政治 · 史纲 / 毛概 / 习概</div>
+  <h1>近现代中国史纲 <span>·</span> 理论发展时间轴</h1>
+  <p>按考研政治大纲解析梳理：历史脉络、党的重要会议、经典著作与马克思主义中国化时代化理论成果</p>
+  <div class="stats">
+    <div><b id="stNodes">0</b> 个知识节点</div>
+    <div><b>10</b> 个历史阶段</div>
+    <div><b>1840—2024</b> 时间跨度</div>
+    <div><b>6</b> 大理论板块</div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab on" data-v="timeline">时间轴</button>
+  <button class="tab" data-v="theory">理论体系</button>
+  <button class="tab" data-v="quick">考点速查</button>
+</nav>
+
+<!-- ============ 时间轴视图 ============ -->
+<div class="view on" id="v-timeline">
+  <div class="toolbar">
+    <div class="search"><input id="q" type="search" placeholder="搜索事件、会议、著作、理论…"></div>
+    <div class="chips" id="chips">
+      <button class="chip on" data-k="all">全部</button>
+      <button class="chip" data-k="event">史事</button>
+      <button class="chip" data-k="meeting">会议</button>
+      <button class="chip" data-k="work">著作</button>
+      <button class="chip" data-k="theory">理论</button>
+      <button class="chip" data-k="concept">考点</button>
+    </div>
+    <button class="ghost-btn" id="toggleAll">展开全部</button>
+  </div>
+
+  <div class="layout">
+    <aside class="toc">
+      <h4>历史阶段</h4>
+      <div id="tocList"></div>
+      <div class="legend">
+        <div><i style="background:#b23a2e"></i>史事 / 事件</div>
+        <div><i style="background:#c07a2c"></i>重要会议</div>
+        <div><i style="background:#4f7a5e"></i>经典著作</div>
+        <div><i style="background:#4a6b8a"></i>理论成果</div>
+        <div><i style="background:#b8912f"></i>核心考点</div>
+      </div>
+    </aside>
+    <section id="trackRoot"></section>
+  </div>
+</div>
+
+<!-- ============ 理论体系视图 ============ -->
+<div class="view" id="v-theory">
+  <div class="intro">
+    <div class="intro-box">
+      <h3 class="serif">马克思主义中国化时代化的理论进程</h3>
+      <p>党把马克思主义基本原理同中国具体实际相结合、同中华优秀传统文化相结合，推进理论创新，实现马克思主义中国化时代化的一次次飞跃。考研政治中，<strong>理论成果的确立会议、回答的基本问题、精髓与历史地位</strong>是最容易出选择题的地方。</p>
+      <div class="flow">
+        <div><b>第一次历史性飞跃</b><strong>毛泽东思想</strong><br>回答：什么是新民主主义革命、怎样进行新民主主义革命；以及在中国如何建设社会主义</div>
+        <div><b>新的飞跃</b><strong>中国特色社会主义理论体系</strong><br>邓小平理论、「三个代表」重要思想、科学发展观；回答什么是社会主义、怎样建设社会主义，建设什么样的党、怎样建设党，实现什么样的发展、怎样发展</div>
+        <div><b>新的飞跃</b><strong>习近平新时代中国特色社会主义思想</strong><br>回答新时代坚持和发展什么样的中国特色社会主义、怎样坚持和发展中国特色社会主义，建设什么样的社会主义现代化强国、怎样建设社会主义现代化强国等</div>
+      </div>
+    </div>
+  </div>
+  <div class="theory-grid" id="theoryGrid"></div>
+</div>
+
+<!-- ============ 考点速查视图 ============ -->
+<div class="view" id="v-quick">
+  <div class="quick" id="quickRoot"></div>
+</div>
+
+<footer class="foot">
+  内容依据《中国近现代史纲要》《毛泽东思想和中国特色社会主义理论体系概论》及考研政治大纲解析梳理 · 建议配合真题使用<br>
+  <a href="/">← 返回 408 学习站</a>
+  <span>·</span>
+  <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">赣ICP备2026030318号</a>
+</footer>
+
+<script>
+(function(){
+  const C = {event:'#b23a2e',meeting:'#c07a2c',work:'#4f7a5e',theory:'#4a6b8a',concept:'#b8912f'};
+  const KN = {event:'史事',meeting:'会议',work:'著作',theory:'理论',concept:'考点'};
+
+  /* ==================== 阶段 ==================== */
+  const STAGES = [
+    {id:1,span:'1840—1901',name:'沉沦与抗争',desc:'列强入侵使中国逐步沦为半殖民地半封建社会；不同社会力量先后从器物、制度层面探索国家出路，均告失败。'},
+    {id:2,span:'1901—1919',name:'从改良到革命',desc:'资产阶级革命派登上历史舞台，辛亥革命推翻帝制；新文化运动与十月革命为马克思主义传播准备条件。'},
+    {id:3,span:'1919—1927',name:'开天辟地',desc:'五四运动标志新民主主义革命开端，中国共产党成立，第一次国共合作与大革命兴起又失败。'},
+    {id:4,span:'1927—1937',name:'星火燎原',desc:'武装反抗国民党反动派，开辟农村包围城市道路；长征与遵义会议实现伟大转折；抗日民族统一战线初步形成。'},
+    {id:5,span:'1937—1945',name:'中流砥柱',desc:'全民族抗战，抗日民族统一战线；新民主主义理论成熟，毛泽东思想在七大确立为指导思想。'},
+    {id:6,span:'1945—1949',name:'两种命运之决战',desc:'争取和平民主到解放战争，三大战役推翻国民党统治，中华人民共和国成立。'},
+    {id:7,span:'1949—1978',name:'立国与奠基',desc:'完成社会主义革命，确立社会主义基本制度，开展大规模社会主义建设，探索中有成就也有曲折。'},
+    {id:8,span:'1978—1992',name:'伟大转折',desc:'十一届三中全会开启改革开放；社会主义初级阶段理论与邓小平理论逐步形成。'},
+    {id:9,span:'1992—2012',name:'世纪跨越',desc:'确立社会主义市场经济体制；邓小平理论、「三个代表」重要思想、科学发展观相继确立为指导思想。'},
+    {id:10,span:'2012—至今',name:'新时代新征程',desc:'中国特色社会主义进入新时代，习近平新时代中国特色社会主义思想形成发展，以中国式现代化全面推进中华民族伟大复兴。'}
+  ];
+
+  /* ==================== 时间轴节点 ==================== */
+  const N = [
+    /* --- 阶段 1 --- */
+    {y:'1840',k:'event',s:1,t:'鸦片战争爆发',d:'中国近代史的起点，中国开始沦为半殖民地半封建社会。',p:['英国以林则徐虎门销烟为借口发动侵华战争，清政府战败。','社会性质开始变化：独立的封建社会逐步变为<strong>半殖民地半封建社会</strong>。','主要矛盾由地主阶级与农民阶级的矛盾，转变为<strong>帝国主义和中华民族的矛盾、封建主义和人民大众的矛盾</strong>，前者成为最主要的矛盾。','中华民族面临两大历史任务：求得民族独立和人民解放；实现国家富强和人民富裕。'],tip:'高频：近代中国社会性质、主要矛盾、两大历史任务的关系。'},
+    {y:'1842',k:'event',s:1,t:'中英《南京条约》',d:'中国近代史上第一个不平等条约。',p:['割让香港岛、赔款 2100 万银元、开放广州厦门福州宁波上海五口通商、协定关税。','此后陆续签订《虎门条约》《望厦条约》《黄埔条约》等，破坏了中国的领土、关税、司法等主权。'],tip:'注意：割让香港岛（不是整个香港），协定关税破坏关税自主权。'},
+    {y:'1851—1864',k:'event',s:1,t:'太平天国运动',d:'农民战争的最高峰，动摇了清王朝统治。',p:['《天朝田亩制度》：以解决土地问题为中心，体现平均主义理想，但具有空想性质。','《资政新篇》：洪仁玕提出，是<strong>中国近代史上第一个比较系统的发展资本主义的方案</strong>，但缺乏实施的社会条件。','失败原因：农民阶级不是新的生产力和生产关系的代表，无法克服小生产者固有的阶级局限性。'],tip:'高频：《天朝田亩制度》与《资政新篇》的比较；农民阶级局限性。'},
+    {y:'1861—1895',k:'event',s:1,t:'洋务运动',d:'地主阶级洋务派「自强」「求富」的器物层面探索。',p:['指导思想<strong>「中体西用」</strong>：以中国封建伦理纲常为本，辅以西方近代科技。','举办近代军事工业、民用企业，建立新式海陆军，创办新式学堂、派遣留学生。','甲午战争北洋水师全军覆没，标志洋务运动失败。','失败原因：封建性、依赖性、腐朽性；只学技术不变制度。'],tip:'高频：洋务运动的历史作用与失败原因；「中体西用」的局限。'},
+    {y:'1894—1895',k:'event',s:1,t:'甲午战争与《马关条约》',d:'大大加深了中国半殖民地化程度。',p:['《马关条约》割让台湾全岛及所有附属各岛屿、澎湖列岛，赔款 2 亿两白银，允许日本在华设厂。','允许外国在华投资设厂，标志列强对华经济侵略由<strong>商品输出为主转向资本输出为主</strong>。','刺激列强掀起瓜分中国狂潮，民族意识普遍觉醒。'],tip:'高频：割让台湾及澎湖；资本输出；民族意识觉醒（严复《救亡决论》、孙中山「振兴中华」）。'},
+    {y:'1898',k:'event',s:1,t:'戊戌维新运动',d:'资产阶级维新派发起的制度层面改良，历时 103 天失败。',p:['代表人物：康有为、梁启超、谭嗣同、严复；光绪帝颁布变法诏令，史称「百日维新」。','主张君主立宪、废八股、办新式学堂、发展工商业；<strong>不敢否定封建主义</strong>，对帝国主义抱有幻想，惧怕人民群众。','失败标志：慈禧太后发动戊戌政变，谭嗣同等「戊戌六君子」遇害。','意义：一次爱国救亡运动、资产阶级性质的改良运动、思想启蒙运动。'],tip:'高频：维新派与守旧派论战的三个问题（要不要变法、要不要兴民权设议院、要不要废八股）；失败原因。'},
+    {y:'1900—1901',k:'event',s:1,t:'八国联军侵华与《辛丑条约》',d:'中国完全沦为半殖民地半封建社会。',p:['《辛丑条约》赔款 4.5 亿两白银（分 39 年还清，本息合计近 9.8 亿两），划定使馆界，拆毁炮台，严禁中国人民反帝。','<strong>清政府彻底成为列强统治中国的工具</strong>，标志中国半殖民地半封建社会完全形成。'],tip:'高频：完全沦为 vs 开始沦为 vs 大大加深，三个节点别混。'},
+    {y:'小结',k:'concept',s:1,t:'早期探索的三条路径与结论',d:'器物 → 制度 → 思想，层层递进却都未能救中国。',p:['<strong>器物层面</strong>：洋务运动（地主阶级洋务派）；<strong>制度层面</strong>：戊戌维新（君主立宪）、辛亥革命（民主共和）；<strong>思想层面</strong>：新文化运动。','三次探索共同失败说明：不触动封建根基的自强运动和改良主义、旧式农民战争、资产阶级革命派领导的革命，都不能完成历史任务。','结论：必须有一个先进阶级及其政党领导，以科学理论为指导，走新的革命道路。'],tip:'常以材料分析题出现：为什么资本主义道路在中国行不通。'},
+
+    /* --- 阶段 2 --- */
+    {y:'1905',k:'event',s:2,t:'中国同盟会成立与三民主义',d:'第一个全国性资产阶级革命政党，提出完整革命纲领。',p:['孙中山在日本东京成立，纲领「驱除鞑虏，恢复中华，创立民国，平均地权」。','阐发为<strong>民族、民权、民生</strong>三大主义：民族主义即民族革命（推翻满清），民权主义即政治革命（创立民国，核心），民生主义即社会革命（平均地权）。','局限：没有明确反帝，没有彻底的土地纲领，未反映农民土地要求。'],tip:'高频：三民主义的内容与局限；民权主义是核心。'},
+    {y:'1911',k:'event',s:2,t:'辛亥革命',d:'推翻清王朝，结束两千多年君主专制制度。',p:['1911 年 10 月 10 日武昌起义，各省响应，1912 年 2 月 12 日清帝退位。','历史意义：推翻了清王朝统治，结束封建君主专制，<strong>传播了民主共和理念</strong>，推动思想解放与社会变革，为后来的革命开辟道路。','失败原因（客观上）中外反动势力联合绞杀；<strong>主观上是资产阶级的软弱性与妥协性</strong>：没有提出彻底反帝反封建纲领、不能充分发动群众、不能建立坚强革命政党。'],tip:'高频：辛亥革命「成功了还是失败了」的辩证分析；资产阶级共和国方案破产。'},
+    {y:'1912',k:'event',s:2,t:'中华民国与《临时约法》',d:'中国历史上第一部具有资产阶级共和国宪法性质的法典。',p:['1912 年 1 月 1 日孙中山在南京就任临时大总统，中华民国临时政府成立。','《中华民国临时约法》确立<strong>主权在民、三权分立</strong>，规定国民一律平等及各项自由权利。','政权很快被袁世凯窃取，北洋军阀统治开始。'],tip:'注意：约法为限制袁世凯而改总统制为责任内阁制。'},
+    {y:'1915',k:'event',s:2,t:'新文化运动',d:'思想文化层面的启蒙，为马克思主义传播准备条件。',p:['起点：陈独秀在上海创办《青年杂志》（后改名《新青年》），主要阵地《新青年》与北京大学。','口号<strong>民主（德先生）与科学（赛先生）</strong>；提倡新道德、新文学，反对旧道德、旧文学。','前期是资产阶级民主主义的新文化反对封建主义旧文化的斗争；十月革命后开始传播马克思主义。','局限：脱离工农群众，存在形式主义地看问题的偏向。'],tip:'高频：新文化运动的分期（五四前 / 五四后）、口号与局限。'},
+    {y:'1917',k:'event',s:2,t:'俄国十月革命与马克思主义传播',d:'给中国送来马克思列宁主义。',p:['十月革命推动中国先进分子从资产阶级民主主义转向社会主义。','<strong>李大钊</strong>发表《法俄革命之比较观》《庶民的胜利》《布尔什维主义的胜利》《我的马克思主义观》，是先驱与旗帜。','五四运动后马克思主义开始广泛传播，并逐步与工人运动相结合。'],tip:'高频：李大钊四篇文章；「十月革命一声炮响」。'},
+
+    /* --- 阶段 3 --- */
+    {y:'1919',k:'event',s:3,t:'五四运动',d:'新民主主义革命的开端。',p:['导火索：巴黎和会上中国外交失败（德国在山东权益被转让给日本）。','前期中心北京、主力学生；后期中心上海、主力<strong>工人阶级</strong>，工人罢工成为斗争胜利的决定性因素。','历史特点：彻底地不妥协地反帝国主义、彻底地不妥协地反封建主义；<strong>促进了马克思主义在中国的传播及其与工人运动的结合</strong>，为中国共产党成立作了思想和干部准备。','五四精神：爱国、进步、民主、科学，核心是爱国主义。'],tip:'必考：为什么五四运动是新民主主义革命的开端（领导阶级、指导思想、群众基础、革命前途）。'},
+    {y:'1921',k:'meeting',s:3,t:'中共一大 · 中国共产党成立',d:'开天辟地的大事变，中国革命面貌焕然一新。',p:['1921 年 7 月 23 日在上海召开，最后一天转移至嘉兴南湖游船；确定党的名称「中国共产党」和奋斗目标。','中国共产党是<strong>马克思主义与中国工人运动相结合的产物</strong>。','伟大建党精神：坚持真理、坚守理想，践行初心、担当使命，不怕牺牲、英勇斗争，对党忠诚、不负人民。','「焕然一新」：有了坚强领导核心、科学指导思想、明确奋斗目标、新的革命方法与群众基础。'],tip:'高频：建党精神 32 字；「开天辟地的大事变」。'},
+    {y:'1922',k:'meeting',s:3,t:'中共二大',d:'第一次提出彻底的反帝反封建民主革命纲领。',p:['最高纲领：实现社会主义、共产主义；<strong>最低纲领（当前阶段）</strong>：打倒军阀，推翻国际帝国主义压迫，统一中国为真正民主共和国。','提出<strong>群众路线</strong>的方法：「到群众中去」，组成大的群众党。','一大建党、二大立纲、三大定合作方针。'],tip:'高频：二大第一次提出彻底反帝反封建纲领；最高纲领与最低纲领。'},
+    {y:'1923',k:'meeting',s:3,t:'中共三大',d:'决定共产党员以个人身份加入国民党，实行党内合作。',p:['确立国共合作方针，同时强调保持共产党在思想上、政治上、组织上的独立性。','1924 年国民党一大召开，标志<strong>第一次国共合作正式形成</strong>。'],tip:'注意：合作形式是「党内合作」，不是两党合并。'},
+    {y:'1924',k:'meeting',s:3,t:'国民党一大 · 新三民主义',d:'第一次国共合作的政治基础。',p:['确立<strong>联俄、联共、扶助农工</strong>三大政策，把旧三民主义发展为新三民主义。','新三民主义中民族主义突出反帝，民权主义强调为一般平民所共有，民生主义增加「节制资本」并提出「耕者有其田」。','新三民主义与中共民主革命纲领<strong>原则一致但有区别</strong>（有无彻底土地纲领、有无社会主义前途等），这是合作又斗争的根源。'],tip:'高频：三大政策与新三民主义；两党纲领的异同。'},
+    {y:'1926—1927',k:'event',s:3,t:'北伐战争与大革命失败',d:'基本推翻北洋军阀统治，但大革命最终失败。',p:['1926 年 7 月北伐开始，迅速击溃吴佩孚、孙传芳主力。','1927 年<strong>四一二反革命政变</strong>（蒋介石，上海）、<strong>七一五分共</strong>（汪精卫，武汉），国共合作破裂。','失败客观原因：反革命力量强大、资产阶级动摇、蒋介石集团背叛；主观原因：党处在幼年，<strong>陈独秀右倾机会主义错误</strong>放弃统一战线中的领导权，尤其是对武装力量的领导权。','经验教训：必须坚持无产阶级领导权，必须掌握革命武装，必须建立统一战线中的独立自主。'],tip:'必考：大革命失败原因与经验教训，常与「枪杆子里出政权」联系。'},
+
+    /* --- 阶段 4 --- */
+    {y:'1927.8.1',k:'event',s:4,t:'南昌起义',d:'打响武装反抗国民党反动派的第一枪。',p:['周恩来、贺龙、叶挺、朱德、刘伯承等领导，标志<strong>中国共产党独立领导革命战争、创建人民军队和武装夺取政权</strong>的开端。','8 月 1 日为中国人民解放军建军节。'],tip:'注意：「第一枪」是南昌起义；「创建人民军队」也由此起。'},
+    {y:'1927.8.7',k:'meeting',s:4,t:'八七会议',d:'确定土地革命和武装反抗国民党反动派的总方针。',p:['毛泽东提出<strong>「须知政权是由枪杆子中取得的」</strong>著名论断。','会议选出以瞿秋白为首的中央临时政治局，开始了从大革命失败到土地革命战争兴起的转折。','缺点：在反对右倾错误时未注意防止「左」倾错误滋长。'],tip:'必考：八七会议内容 + 枪杆子论断。'},
+    {y:'1927.9',k:'event',s:4,t:'秋收起义 · 三湾改编 · 井冈山',d:'从进攻大城市转向农村，创建第一个农村革命根据地。',p:['秋收起义打出<strong>「工农革命军」</strong>旗帜；进攻长沙受挫后，毛泽东率部转向敌人统治力量薄弱的湘赣边界山区。','<strong>三湾改编</strong>：确立「支部建在连上」，从组织上确立党对军队的领导，是建设无产阶级领导的新型人民军队的重要开端。','创建<strong>井冈山革命根据地</strong>，点燃「工农武装割据」的星星之火。'],tip:'高频：三湾改编（党指挥枪的组织基础）与古田会议（思想建党建军）的区别。'},
+    {y:'1928',k:'work',s:4,t:'《中国的红色政权为什么能够存在？》《井冈山的斗争》',d:'论证红色政权存在发展的原因和条件，提出「工农武装割据」思想。',p:['红色政权能够存在的原因：中国是政治经济发展不平衡的半殖民地半封建大国（根本原因）、国民革命的政治影响及良好群众基础、全国革命形势继续发展、相当力量的正式红军存在、共产党组织有力量和政策正确。','<strong>工农武装割据</strong> = 土地革命（基本内容）+ 武装斗争（主要斗争形式）+ 农村革命根据地（战略阵地）三者结合。'],tip:'高频：工农武装割据三要素及各自定位。'},
+    {y:'1930.1',k:'work',s:4,t:'《星星之火，可以燎原》',d:'初步形成农村包围城市、武装夺取政权的革命道路理论。',p:['批判「红旗到底打得多久」的悲观情绪，指出红军、游击队和红色区域的建立发展是<strong>半殖民地中国在无产阶级领导之下的农民斗争的最高形式</strong>。','实际上确立了<strong>「以乡村为中心」</strong>的思想，标志着中国革命道路理论的基本形成。'],tip:'必考：这篇著作是「农村包围城市道路理论基本形成」的标志。'},
+    {y:'1930.5',k:'work',s:4,t:'《反对本本主义》',d:'党内第一篇反对教条主义、阐明实事求是思想路线的文献。',p:['提出<strong>「没有调查，没有发言权」</strong>和「中国革命斗争的胜利要靠中国同志了解中国情况」。','强调马克思主义必须同中国实际相结合，蕴含<strong>实事求是、群众路线、独立自主</strong>的思想雏形。'],tip:'高频：实事求是思想路线的初步提出；与延安整风、十一届三中全会串成一条线。'},
+    {y:'1931',k:'event',s:4,t:'九一八事变与中华苏维埃共和国',d:'日本侵占东北，中国局部抗战开始；工农民主政权建立。',p:['1931 年 9 月 18 日日本关东军制造事端侵占东北，<strong>中国局部抗战开始</strong>，也是世界反法西斯战争的东方起点。','1931 年 11 月中华苏维埃共和国临时中央政府在瑞金成立，毛泽东当选主席。','1932 年 4 月中华苏维埃共和国临时中央政府<strong>对日宣战</strong>，是最早对日宣战的政权。'],tip:'注意区分：1931 局部抗战起点 vs 1937 全面抗战起点。'},
+    {y:'1934—1936',k:'event',s:4,t:'红军长征',d:'第五次反「围剿」失败后的战略转移，保存了革命力量。',p:['直接原因：<strong>王明「左」倾教条主义错误</strong>导致第五次反「围剿」失败。','1934 年 10 月中央红军出发；1935 年 10 月到达陕北吴起镇；1936 年 10 月红军三大主力在甘肃会宁、静宁将台堡会师，长征胜利结束。','伟大长征精神：把全国人民和中华民族的根本利益看得高于一切，坚定革命理想和信念，独立自主、实事求是，顾全大局、严守纪律、紧密团结，紧紧依靠人民群众。','意义：宣告国民党反动派消灭共产党和红军的图谋破产，<strong>开启了中国共产党为实现民族独立人民解放而斗争的新阶段</strong>。'],tip:'高频：长征原因、遵义会议、长征精神；「长征一完结，新局面就开始了」。'},
+    {y:'1935.1',k:'meeting',s:4,t:'遵义会议',d:'党的历史上一个生死攸关的转折点。',p:['集中解决当时具有决定意义的<strong>军事问题和组织问题</strong>，增选毛泽东为中央政治局常委，实际上确立了毛泽东在党中央和红军的领导地位。','开始确立以毛泽东为主要代表的马克思主义正确路线在党中央的领导地位，开始形成以毛泽东为核心的第一代中央领导集体。','<strong>标志党从幼年走向成熟</strong>：第一次独立自主地运用马克思主义基本原理解决自己的路线方针政策问题。'],tip:'必考：只解决军事和组织问题，未解决思想路线问题（那是延安整风）；「生死攸关的转折点」「从幼年走向成熟」。'},
+    {y:'1935.12',k:'event',s:4,t:'一二·九运动',d:'抗日救亡运动新高潮，促进抗日民族统一战线形成。',p:['北平学生发起，喊出<strong>「停止内战，一致对外」「打倒日本帝国主义」</strong>等口号。','促进了中华民族觉醒，标志中国人民抗日救亡民主运动新高潮的到来，为全民族抗战作了思想和干部准备。'],tip:'常与五四运动比较：都是青年学生发起的爱国运动。'},
+    {y:'1935.12',k:'meeting',s:4,t:'瓦窑堡会议',d:'确立建立抗日民族统一战线的方针。',p:['批判党内「左」倾关门主义，提出<strong>建立广泛的抗日民族统一战线</strong>的新政策。','毛泽东作《论反对日本帝国主义的策略》的报告，阐明统一战线可能性与必要性。'],tip:'高频：瓦窑堡会议（统一战线方针）vs 洛川会议（全面抗战路线）。'},
+    {y:'1936.12',k:'event',s:4,t:'西安事变和平解决',d:'十年内战基本结束，抗日民族统一战线初步形成。',p:['张学良、杨虎城发动「兵谏」逼蒋抗日；中共中央派周恩来等赴西安，促成<strong>和平解决</strong>。','蒋介石被迫接受停止内战、联共抗日等条件，<strong>基本结束了十年内战</strong>，为国共第二次合作奠定基础。'],tip:'高频：「初步形成」是西安事变；「正式形成」是 1937 年 9 月国民党中央通讯社发表《中共中央为公布国共合作宣言》、蒋介石发表实际承认共产党合法地位的谈话。'},
+
+    /* --- 阶段 5 --- */
+    {y:'1937.7.7',k:'event',s:5,t:'七七事变（卢沟桥事变）',d:'日本全面侵华，中国全民族抗战开始。',p:['标志<strong>日本全面侵华战争开始</strong>，也是<strong>中国全民族抗战的起点</strong>，开辟了世界反法西斯战争的东方主战场。','中国抗战形成<strong>正面战场与敌后战场</strong>相互配合的战略格局。'],tip:'注意：1931 局部抗战起点；1937 全面抗战起点。'},
+    {y:'1937.8',k:'meeting',s:5,t:'洛川会议',d:'制定全面抗战路线（全民族抗战路线）。',p:['通过《中国共产党抗日救国十大纲领》，强调<strong>必须实行全民族的全面抗战路线，反对片面抗战路线</strong>。','决定把党的工作重心放在战区和敌后，开展独立自主的游击战争，建立抗日根据地。','提出<strong>抗日救国十大纲领</strong>；决定红军改编为八路军、新四军。'],tip:'高频：全面抗战路线 vs 国民党片面抗战路线；与瓦窑堡会议区分。'},
+    {y:'1937.9',k:'event',s:5,t:'抗日民族统一战线正式形成 · 平型关大捷',d:'第二次国共合作正式确立，八路军取得抗战首次大捷。',p:['国民党中央通讯社发表《中共中央为公布国共合作宣言》，蒋介石发表承认中共合法地位的谈话，<strong>标志抗日民族统一战线正式形成</strong>。','平型关大捷：<strong>全民族抗战爆发后中国军队主动对日作战取得的第一个重大胜利</strong>，打破日军不可战胜的神话。','统一战线中的策略原则：<strong>独立自主；又联合又斗争；发展进步势力、争取中间势力、孤立顽固势力；有理、有利、有节</strong>。'],tip:'必考：统一战线中的独立自主原则与策略总方针。'},
+    {y:'1938.5',k:'work',s:5,t:'《论持久战》',d:'系统阐明持久抗战的战略总方针，批驳亡国论与速胜论。',p:['指出中日战争是<strong>持久战，最后胜利属于中国</strong>；科学预见<strong>战略防御、战略相持、战略反攻</strong>三个阶段，其中<strong>相持阶段是关键</strong>。','提出<strong>兵民是胜利之本</strong>，实行人民战争路线；阐明持久战根据：敌强我弱、敌小我大、敌退步我进步、敌寡助我多助。'],tip:'必考：三阶段划分、相持阶段是关键、「兵民是胜利之本」。'},
+    {y:'1938.10',k:'event',s:5,t:'武汉会战结束 · 进入战略相持阶段',d:'抗战进入最艰苦也最关键的相持阶段。',p:['广州、武汉失守后，日军无力再发动大规模战略进攻，抗战进入<strong>战略相持阶段</strong>。','日本对国民党改为政治诱降为主、军事打击为辅，<strong>敌后战场逐步成为抗战主战场</strong>。','1940 年百团大战：八路军在华北发动的大规模进攻战役，坚定了全国军民抗战必胜信心。'],tip:'注意：相持阶段日军政策转变 → 汪精卫投敌、皖南事变。'},
+    {y:'1939—1940',k:'work',s:5,t:'新民主主义理论的系统阐明',d:'毛泽东思想走向成熟的核心标志。',p:['《〈共产党人〉发刊词》提出<strong>三大法宝：统一战线、武装斗争、党的建设</strong>。','《中国革命和中国共产党》第一次提出<strong>「新民主主义革命」</strong>的科学概念，阐明中国革命两步走。','《新民主主义论》系统阐述新民主主义的政治、经济、文化纲领，形成完整理论体系。','<strong>新民主主义革命总路线</strong>：无产阶级领导的，人民大众的，反对帝国主义、封建主义和官僚资本主义的革命。','两步走：第一步新民主主义革命，第二步社会主义革命；前者是后者的必要准备，后者是前者的必然趋势。'],tip:'必考：三篇著作各自贡献、总路线、两步走关系、三大法宝。'},
+    {y:'1942—1945',k:'meeting',s:5,t:'延安整风运动',d:'一次普遍的马克思主义教育运动，确立实事求是思想路线。',p:['主要内容：<strong>反对主观主义以整顿学风、反对宗派主义以整顿党风、反对党八股以整顿文风</strong>；其中<strong>反对主观主义是中心任务</strong>。','主观主义的主要表现形式是教条主义和经验主义，尤其要反对<strong>教条主义</strong>。','方针「惩前毖后、治病救人」，方法「团结—批评—团结」。','意义：<strong>实事求是的思想路线在全党确立</strong>，为抗战胜利和新中国成立奠定思想政治基础。'],tip:'必考：整风三项内容、中心任务、方针；与《反对本本主义》、十一届三中全会串线。'},
+    {y:'1945.4—6',k:'meeting',s:5,t:'中共七大',d:'确立毛泽东思想为党的指导思想并写入党章。',p:['毛泽东作《论联合政府》报告，提出建立<strong>新民主主义国家</strong>的主张。','概括<strong>三大作风：理论和实践相结合的作风、和人民群众紧密地联系在一起的作风、自我批评的作风</strong>。','制定「放手发动群众，壮大人民力量，在我党的领导下，打败日本侵略者，解放全国人民，建立一个新民主主义的中国」的政治路线。','七大把毛泽东思想确立为全党的指导思想，<strong>使全党在思想上政治上组织上达到空前统一和团结</strong>。'],tip:'必考：七大确立毛泽东思想；三大作风；与三大法宝区分。'},
+    {y:'1945',k:'event',s:5,t:'抗日战争胜利',d:'近代以来中国抗击外敌入侵的第一次完全胜利。',p:['1945 年 8 月 15 日日本宣布无条件投降，9 月 2 日签署投降书，<strong>9 月 3 日为中国人民抗日战争胜利纪念日</strong>；10 月 25 日台湾光复，<strong>台湾重回祖国怀抱</strong>。','意义：彻底粉碎日本军国主义殖民奴役中国的图谋，<strong>捍卫了国家主权和领土完整</strong>；促进中华民族觉醒与团结，确立中国<strong>世界反法西斯战争东方主战场</strong>地位，显著提高中国国际地位（成为联合国安理会常任理事国）。','<strong>中国共产党在全民族抗战中发挥了中流砥柱作用</strong>：倡导和促成统一战线、提出全面抗战路线与持久战战略、开辟敌后战场、坚持抗战团结进步方针。'],tip:'必考：抗战胜利的意义、「中流砥柱」的四点依据、台湾光复日期。'},
+    {y:'1945.8—10',k:'event',s:5,t:'重庆谈判与《双十协定》',d:'争取和平民主的努力，揭露国民党假和平真内战。',p:['毛泽东、周恩来、王若飞赴重庆与国民党谈判，签署<strong>《政府与中共代表会谈纪要》（双十协定）</strong>，确认和平建国基本方针。','1946 年 1 月政治协商会议在重庆召开，通过有利于人民的决议，但很快被国民党撕毁。'],tip:'注意：双十协定未解决军队和解放区政权问题。'},
+
+    /* --- 阶段 6 --- */
+    {y:'1946.6',k:'event',s:6,t:'全面内战爆发',d:'国民党军队进攻中原解放区，解放战争开始。',p:['毛泽东提出<strong>「一切反动派都是纸老虎」</strong>的著名论断，从战略上藐视敌人。','政治上建立<strong>人民民主统一战线</strong>，军事上实行「集中优势兵力、各个歼灭敌人」的作战原则。'],tip:'高频：第二条战线（国统区学生运动）与第一条战线（军事斗争）配合。'},
+    {y:'1947',k:'event',s:6,t:'战略进攻与《中国土地法大纲》',d:'战争由防御转入进攻，土地改革激发农民革命积极性。',p:['1947 年 6 月<strong>刘伯承、邓小平率晋冀鲁豫野战军千里跃进大别山</strong>，揭开战略进攻序幕。','《中国土地法大纲》明确规定<strong>废除封建性及半封建性剥削的土地制度，实行耕者有其田</strong>。','土地改革使亿万农民在政治上经济上翻身，<strong>是解放战争胜利的重要保证</strong>。'],tip:'高频：土地改革与农民支持的关系，材料题常见。'},
+    {y:'1948.9—1949.1',k:'event',s:6,t:'三大战役',d:'辽沈、淮海、平津，基本上消灭国民党军主力。',p:['辽沈战役（东北）、淮海战役（以徐州为中心）、平津战役（华北，北平和平解放），历时 142 天，共歼灭和改编国民党军队 154 万余人。','<strong>群众支前是胜利的重要保证</strong>，「小车推出来的胜利」体现人民群众是历史创造者。'],tip:'注意顺序：辽沈 → 淮海 → 平津。'},
+    {y:'1949.3',k:'meeting',s:6,t:'中共七届二中全会',d:'为夺取全国胜利和建设新中国作政治思想准备。',p:['提出<strong>党的工作重心由乡村转移到城市</strong>，规定全国胜利后在政治经济外交方面的基本政策。','提出<strong>「两个务必」</strong>：务必使同志们继续地保持谦虚、谨慎、不骄、不躁的作风，务必使同志们继续地保持艰苦奋斗的作风。','告诫全党警惕资产阶级「糖衣炮弹」的攻击，<strong>进京赶考</strong>。'],tip:'必考：两个务必、工作重心转移、「进京赶考」，常与时政「三个务必」对照。'},
+    {y:'1949.6',k:'work',s:6,t:'《论人民民主专政》',d:'阐明新中国国家政权性质，为建国奠定理论基础。',p:['提出「总结我们的经验，集中到一点，就是<strong>工人阶级（经过共产党）领导的以工农联盟为基础的人民民主专政</strong>」。','指出<strong>人民民主专政需要工人阶级的领导</strong>，其基础是工人阶级、农民阶级和城市小资产阶级的联盟，主要是工农联盟。','为《共同纲领》和新中国政权建设提供理论依据。'],tip:'高频：人民民主专政的阶级基础与领导力量。'},
+    {y:'1949.9',k:'meeting',s:6,t:'中国人民政治协商会议第一届全体会议',d:'通过起临时宪法作用的《共同纲领》。',p:['通过<strong>《中国人民政治协商会议共同纲领》</strong>，规定国体为人民民主专政、政体为人民代表大会制度（当时条件不成熟，由政协代行人大职权）。','确定国都北平改名北京、国旗五星红旗、代国歌《义勇军进行曲》、公元纪年。','标志<strong>中国共产党领导的多党合作和政治协商制度</strong>正式确立。'],tip:'高频：《共同纲领》在 1954 年宪法颁布前起临时宪法作用。'},
+    {y:'1949.10.1',k:'event',s:6,t:'中华人民共和国成立',d:'民族独立、人民解放任务基本完成，开启历史新纪元。',p:['<strong>彻底结束了旧中国半殖民地半封建社会的历史</strong>，彻底结束了旧中国一盘散沙的局面，彻底废除了列强强加的不平等条约和帝国主义在华一切特权。','实现了中国从几千年封建专制政治向<strong>人民民主</strong>的伟大飞跃，<strong>为实现由新民主主义向社会主义过渡创造了前提条件</strong>。','中国革命胜利的基本经验（三大法宝的新概括）：<strong>统一战线、武装斗争、党的建设</strong>；毛泽东称其为「战胜敌人的三个法宝」。'],tip:'必考：新中国成立的意义；「站起来」；与 1956 社会主义制度确立、1978 改革开放并列为三大历史性事件。'},
+
+    /* --- 阶段 7 --- */
+    {y:'1949—1952',k:'event',s:7,t:'国民经济恢复与巩固新生政权',d:'完成民主革命遗留任务，为社会主义改造创造条件。',p:['没收官僚资本、建立国营经济，稳定物价统一财经（「银元之战」「米棉之战」），<strong>土地改革</strong>在全国大陆基本完成。','<strong>抗美援朝</strong>（1950—1953）：捍卫新中国安全，提高国际威望，为建设赢得相对稳定的和平环境。','1952 年底国民经济得到全面恢复，<strong>新民主主义社会</strong>的经济结构中社会主义因素已居领导地位。'],tip:'注意：1949—1956 是新民主主义社会（过渡性质的社会），不是社会主义社会。'},
+    {y:'1953',k:'theory',s:7,t:'过渡时期总路线',d:'「一化三改」「一体两翼」，社会主义改造与工业化并举。',p:['完整表述：从中华人民共和国成立，到社会主义改造基本完成，这是一个过渡时期。党在这个过渡时期的总路线和总任务，是要在一个相当长的时期内，<strong>逐步实现国家的社会主义工业化</strong>，并逐步实现<strong>国家对农业、对手工业和对资本主义工商业的社会主义改造</strong>。','<strong>「一化」是主体，「三改」是两翼</strong>，体现社会主义建设与改造同时并举。','对资本主义工商业采取<strong>和平赎买</strong>政策，通过国家资本主义形式（委托加工、计划订货、统购包销、公私合营、全行业公私合营）逐步改造，是<strong>中国社会主义改造的创造性经验</strong>。'],tip:'必考：总路线内容、一体两翼、和平赎买的特点与原因。'},
+    {y:'1953—1957',k:'event',s:7,t:'第一个五年计划',d:'集中力量发展重工业，奠定工业化初步基础。',p:['以<strong>156 项重点工程</strong>为中心，重点发展重工业，相应地发展交通运输、轻工业、农业和商业。','1957 年超额完成，<strong>开始改变我国工业落后的面貌</strong>，为社会主义工业化奠定初步基础。'],tip:'注意：一五计划与三大改造同步进行，都是过渡时期总路线的实践。'},
+    {y:'1956',k:'event',s:7,t:'社会主义改造基本完成',d:'社会主义基本制度在中国确立，进入社会主义初级阶段。',p:['1956 年底农业、手工业和资本主义工商业的社会主义改造基本完成，<strong>生产资料公有制占绝对优势</strong>。','<strong>标志剥削制度被消灭，社会主义基本经济制度、政治制度确立</strong>，中国进入社会主义初级阶段。','这是中国历史上<strong>最深刻最伟大的社会变革</strong>，为当代中国一切发展进步奠定了根本政治前提和制度基础。','评价：改造后期存在要求过急、工作过粗、改变过快、形式过于简单划一等缺点，但<strong>成就不容否定</strong>。'],tip:'必考：1956 是「制度确立」，1949 是「国家成立」，别混；三大改造完成的意义。'},
+    {y:'1956.4',k:'work',s:7,t:'《论十大关系》',d:'探索适合中国国情的社会主义建设道路的开篇之作。',p:['提出<strong>「以苏为鉴」，独立自主地探索适合中国情况的社会主义建设道路</strong>。','论述重工业与轻工业农业、沿海与内地、经济建设与国防建设、国家生产单位与个人、中央与地方、汉族与少数民族、党与非党、革命与反革命、是非、中国与外国等十大关系。','确定<strong>「调动一切积极因素为社会主义服务」</strong>的基本方针。'],tip:'高频：以苏为鉴、调动一切积极因素；是探索的良好开端。'},
+    {y:'1956.9',k:'meeting',s:7,t:'中共八大',d:'全面建设社会主义时期第一次全国代表大会，路线正确但未能坚持。',p:['指出国内主要矛盾已是<strong>人民对于建立先进的工业国的要求同落后的农业国的现实之间的矛盾，人民对于经济文化迅速发展的需要同当前经济文化不能满足人民需要的状况之间的矛盾</strong>。','据此确定<strong>党和国家的主要任务是集中力量发展社会生产力，实现国家工业化，逐步满足人民日益增长的物质文化需要</strong>。','提出既反保守又反冒进、在综合平衡中稳步前进的经济建设方针；强调<strong>加强执政党建设、反对官僚主义、坚持民主集中制和集体领导</strong>。'],tip:'必考：八大主要矛盾的表述，与 1981 年历史决议、十九大主要矛盾转化的表述对比。'},
+    {y:'1957.2',k:'work',s:7,t:'《关于正确处理人民内部矛盾的问题》',d:'创立社会主义社会矛盾理论。',p:['明确指出<strong>社会主义社会仍存在生产力和生产关系、经济基础和上层建筑的基本矛盾</strong>，但它们是非对抗性的，可以通过社会主义制度自身调整解决。','区分<strong>敌我矛盾（用专政方法）和人民内部矛盾（用民主方法）</strong>，提出<strong>把正确处理人民内部矛盾作为国家政治生活的主题</strong>。','具体方针：政治思想领域「团结—批评—团结」；物质利益与分配「统筹兼顾、适当安排」；科学文化「百花齐放、百家争鸣」；共产党与民主党派「长期共存、互相监督」。'],tip:'必考：社会主义社会基本矛盾、两类不同性质矛盾及处理方法、国家政治生活的主题。'},
+    {y:'1958—1976',k:'event',s:7,t:'探索中的曲折：大跃进、「文化大革命」',d:'社会主义建设在探索中经历严重挫折，教训深刻。',p:['1958 年<strong>「大跃进」和人民公社化运动</strong>：忽视客观经济规律，急于求成，造成国民经济严重困难；1961 年起实行「调整、巩固、充实、提高」八字方针。','<strong>「文化大革命」（1966—1976）</strong>：1981 年《关于建国以来党的若干历史问题的决议》定性为「一场由领导者错误发动，被反革命集团利用，给党、国家和各族人民带来严重灾难的内乱」；1976 年 10 月粉碎「四人帮」标志结束。','这一时期建设成就仍不可忽视：<strong>1964 年第一颗原子弹、1967 年第一颗氢弹、1970 年「东方红一号」卫星</strong>；1971 年恢复在联合国合法席位；1972 年尼克松访华、中美关系正常化进程启动。','根本教训：<strong>必须坚持实事求是，必须以经济建设为中心，必须健全民主集中制与法治</strong>。'],tip:'注意：对历史曲折要按《历史决议》口径表述，区分「探索中的失误」与「成就」。'},
+
+    /* --- 阶段 8 --- */
+    {y:'1978.5',k:'event',s:8,t:'真理标准问题大讨论',d:'冲破「两个凡是」，为十一届三中全会作思想准备。',p:['《实践是检验真理的唯一标准》一文引发全国讨论，<strong>重申实践是检验真理的唯一标准</strong>这一马克思主义认识论基本原理。','实质是<strong>要不要解放思想的争论</strong>，是继延安整风之后又一次马克思主义思想解放运动，为<strong>重新确立实事求是的思想路线</strong>奠定基础。'],tip:'高频：真理标准讨论的实质与意义；与延安整风并列为两次思想解放。'},
+    {y:'1978.12',k:'meeting',s:8,t:'十一届三中全会',d:'新中国成立以来党的历史上具有深远意义的伟大转折。',p:['<strong>冲破长期「左」的错误的严重束缚，确定了解放思想、开动脑筋、实事求是、团结一致向前看的指导方针</strong>，果断结束「以阶级斗争为纲」。','作出<strong>把党和国家工作中心转移到经济建设上来、实行改革开放</strong>的历史性决策。','<strong>实际上形成了以邓小平为核心的党的第二代中央领导集体</strong>，开启了改革开放和社会主义现代化建设新时期。','意义：重新确立<strong>解放思想、实事求是</strong>的思想路线，实现党和国家工作中心转移，是<strong>伟大历史转折</strong>。'],tip:'必考：三个「重新确立/作出/开启」；与遵义会议并称党史上两次伟大转折。'},
+    {y:'1979.3',k:'theory',s:8,t:'四项基本原则',d:'改革开放的政治基石，与「一个中心、两个基本点」相配套。',p:['邓小平在党的理论工作务虚会上提出：坚持社会主义道路，坚持人民民主专政，坚持中国共产党的领导，坚持马列主义、毛泽东思想。','<strong>核心是坚持党的领导</strong>；为改革开放和现代化建设提供根本政治保证。'],tip:'高频：四项基本原则的内容与核心；与资产阶级自由化的对立。'},
+    {y:'1981.6',k:'work',s:8,t:'《关于建国以来党的若干历史问题的决议》',d:'正确评价毛泽东和毛泽东思想，完成指导思想拨乱反正。',p:['<strong>科学评价毛泽东的历史地位</strong>：功绩是第一位的，错误是第二位的；毛泽东思想是<strong>马克思列宁主义在中国的运用和发展，是被实践证明了的关于中国革命和建设的正确的理论原则和经验总结，是中国共产党集体智慧的结晶</strong>。','概括<strong>毛泽东思想活的灵魂：实事求是、群众路线、独立自主</strong>。','<strong>彻底否定「文化大革命」</strong>，对新中国成立以来的重大历史事件和重要人物作出实事求是的评价。','概括<strong>适合我国情况的社会主义现代化建设道路的十个主要点</strong>，初步提出我国社会主义制度还处于初级阶段。'],tip:'必考：对毛泽东与毛泽东思想的科学区分；活的灵魂三条；「功绩第一位、错误第二位」。'},
+    {y:'1982',k:'meeting',s:8,t:'中共十二大',d:'首次提出「建设有中国特色的社会主义」重大命题。',p:['邓小平在开幕词中提出<strong>「把马克思主义的普遍真理同我国的具体实际结合起来，走自己的道路，建设有中国特色的社会主义」</strong>。','提出<strong>「两步走」</strong>战略：到 1990 年国民生产总值翻一番解决温饱，到 20 世纪末再翻一番达到小康水平。','提出<strong>「努力建设高度的社会主义精神文明」</strong>，形成「两手抓」的雏形。'],tip:'高频：「中国特色社会主义」这一命题的首次提出。'},
+    {y:'1987',k:'meeting',s:8,t:'中共十三大',d:'系统阐述社会主义初级阶段理论与基本路线。',p:['明确指出<strong>我国正处在社会主义初级阶段</strong>，含义：我国已经是社会主义社会（必须坚持而不能离开）；我国的社会主义社会还处在初级阶段（必须从这个实际出发，而不能超越这个阶段）。','<strong>基本路线</strong>：领导和团结全国各族人民，以经济建设为中心，坚持四项基本原则，坚持改革开放，自力更生，艰苦创业，为把我国建设成为富强民主文明的社会主义现代化国家而奋斗（即<strong>「一个中心、两个基本点」</strong>；十九大后将目标完善为「富强民主文明和谐美丽的社会主义现代化强国」）。','提出<strong>「三步走」</strong>发展战略：第一步解决温饱，第二步达到小康，第三步到 21 世纪中叶人均国民生产总值达到中等发达国家水平、基本实现现代化。','第一次比较系统地提出<strong>「社会主义初级阶段」理论</strong>，构成邓小平理论的基石。'],tip:'必考：初级阶段两层含义、基本路线、三步走；「一个中心、两个基本点」的关系。'},
+    {y:'1992.1—2',k:'work',s:8,t:'邓小平南方谈话',d:'把改革开放和现代化建设推进到新阶段的宣言书。',p:['提出<strong>社会主义本质</strong>：「解放生产力，发展生产力，消灭剥削，消除两极分化，最终达到共同富裕」。','提出<strong>「三个有利于」</strong>判断标准：是否有利于发展社会主义社会的生产力、是否有利于增强社会主义国家的综合国力、是否有利于提高人民的生活水平。','指出<strong>计划多一点还是市场多一点，不是社会主义与资本主义的本质区别</strong>，「计划经济不等于社会主义，资本主义也有计划；市场经济不等于资本主义，社会主义也有市场」，从根本上解除思想束缚。','强调<strong>「发展才是硬道理」</strong>、「抓住时机，发展自己」、「大胆吸收和借鉴人类社会创造的一切文明成果」、坚持「两手抓、两手都要硬」、<strong>「中国要警惕右，但主要是防止『左』」</strong>。','<strong>是邓小平理论的集大成之作</strong>，为十四大确立社会主义市场经济体制目标扫清思想障碍。'],tip:'必考：社会主义本质、三个有利于、计划与市场论断、发展才是硬道理。'},
+    {y:'1978—1992',k:'theory',s:8,t:'邓小平理论',d:'马克思主义中国化的重要成果，中国特色社会主义理论体系的奠基之作。',p:['<strong>首要的基本理论问题</strong>：什么是社会主义、怎样建设社会主义。','<strong>精髓</strong>：解放思想、实事求是。','主要内容：社会主义初级阶段理论、社会主义本质论、改革开放理论、社会主义市场经济理论、「三步走」发展战略、「一国两制」、社会主义民主法治与精神文明建设、党的建设等。','<strong>1997 年十五大</strong>把邓小平理论确立为党的指导思想并写入党章；1999 年写入宪法。','历史地位：马克思主义中国化的重要成果，<strong>中国特色社会主义理论体系的奠基之作</strong>，改革开放和社会主义现代化建设的科学指南。'],tip:'必考：首要基本问题、精髓、确立会议、历史地位。'},
+
+    /* --- 阶段 9 --- */
+    {y:'1992.10',k:'meeting',s:9,t:'中共十四大',d:'明确经济体制改革目标是建立社会主义市场经济体制。',p:['确立<strong>邓小平建设有中国特色社会主义理论</strong>在全党的指导地位。','明确我国经济体制改革的目标是<strong>建立社会主义市场经济体制</strong>；1993 年十四届三中全会通过《关于建立社会主义市场经济体制若干问题的决定》，勾画基本框架。','强调<strong>「两手抓、两手都要硬」</strong>，把社会主义精神文明建设提高到新水平。'],tip:'注意：社会主义市场经济体制「目标」是十四大，「基本框架」是十四届三中全会，「初步建立」是 20 世纪末。'},
+    {y:'1997',k:'meeting',s:9,t:'中共十五大',d:'邓小平理论确立为党的指导思想。',p:['<strong>把邓小平理论同马克思列宁主义、毛泽东思想一起确立为党的指导思想并写入党章</strong>。','提出<strong>社会主义初级阶段的基本纲领</strong>（建设有中国特色社会主义的经济、政治、文化的基本目标和基本政策）。','明确<strong>公有制为主体、多种所有制经济共同发展</strong>是我国社会主义初级阶段的一项基本经济制度；<strong>依法治国，建设社会主义法治国家</strong>。','1997 年 7 月 1 日香港回归；1999 年 12 月 20 日澳门回归，「一国两制」由构想变为现实。'],tip:'高频：十五大确立邓小平理论；基本经济制度；依法治国方略；港澳回归时间。'},
+    {y:'2000',k:'theory',s:9,t:'「三个代表」重要思想',d:'进一步回答「建设什么样的党、怎样建设党」。',p:['2000 年 2 月江泽民在广东考察时首次提出；2001 年「七一」讲话系统阐述；<strong>2002 年十六大确立为党的指导思想并写入党章</strong>。','集中概括：中国共产党必须<strong>始终代表中国先进生产力的发展要求，代表中国先进文化的前进方向，代表中国最广大人民的根本利益</strong>。','<strong>贯彻「三个代表」重要思想，关键在坚持与时俱进，核心在坚持党的先进性，本质在坚持执政为民</strong>。','历史地位：中国特色社会主义理论体系的接续发展，<strong>加强和改进党的建设、推进中国特色社会主义事业的强大理论武器</strong>。'],tip:'必考：三句话、关键/核心/本质、确立会议。'},
+    {y:'2002',k:'meeting',s:9,t:'中共十六大',d:'确立「三个代表」指导思想，提出全面建设小康社会。',p:['把<strong>「三个代表」重要思想</strong>确立为党的指导思想并写入党章。','提出<strong>全面建设小康社会</strong>的奋斗目标（注意是「建设」不是「建成」）。','总结<strong>党领导人民建设中国特色社会主义必须坚持的十条基本经验</strong>。'],tip:'对比：十六大「全面建设」，十八大「全面建成」。'},
+    {y:'2003',k:'theory',s:9,t:'科学发展观',d:'创造性回答「新形势下实现什么样的发展、怎样发展」。',p:['2003 年 10 月十六届三中全会首次提出「坚持以人为本，树立全面、协调、可持续的发展观」；<strong>2012 年十八大确立为党的指导思想</strong>。','<strong>第一要义是发展，核心是以人为本，基本要求是全面协调可持续，根本方法是统筹兼顾</strong>。','<strong>最鲜明的精神实质</strong>：解放思想、实事求是、与时俱进、求真务实。','强调<strong>构建社会主义和谐社会</strong>（十六届六中全会）、建设资源节约型环境友好型社会、统筹城乡区域经济社会人与自然、国内发展与对外开放等重大关系。'],tip:'必考：四句话的完整表述（第一要义/核心/基本要求/根本方法）。'},
+    {y:'2007',k:'meeting',s:9,t:'中共十七大',d:'首次提出「中国特色社会主义理论体系」科学概念。',p:['明确提出<strong>中国特色社会主义理论体系</strong>是包括<strong>邓小平理论、「三个代表」重要思想以及科学发展观等重大战略思想</strong>在内的科学理论体系（十八大后将科学发展观纳入并明确表述）。','<strong>中国特色社会主义道路</strong>与<strong>中国特色社会主义理论体系</strong>一并写入党章；概括改革开放「十个结合」的宝贵经验。','把科学发展观写入党章（作为「我国经济社会发展的重要指导方针」），2012 年十八大正式确立为指导思想。','提出<strong>实现全面建设小康社会奋斗目标的新要求</strong>。'],tip:'注意：中国特色社会主义理论体系<strong>不包括毛泽东思想</strong>，这是易错点。'},
+    {y:'2012',k:'meeting',s:9,t:'中共十八大',d:'中国特色社会主义进入新时代的前夜，科学发展观确立为指导思想。',p:['把<strong>科学发展观</strong>确立为党必须长期坚持的指导思想并写入党章。','提出<strong>全面建成小康社会</strong>目标（由「建设」到「建成」，一字之差是承诺）。','提出<strong>「五位一体」总体布局</strong>（经济、政治、文化、社会、生态文明建设）写入党章；强调<strong>「四个自信」</strong>的道路自信、理论自信、制度自信（后加文化自信）。','选举产生以习近平同志为总书记的新一届中央领导集体。'],tip:'必考：建设 vs 建成；五位一体总体布局。'},
+    {y:'1992—2012',k:'theory',s:9,t:'中国特色社会主义理论体系（总述）',d:'马克思主义中国化新的飞跃，包括邓小平理论、「三个代表」重要思想、科学发展观。',p:['<strong>不包括毛泽东思想</strong>：毛泽东思想是马克思主义中国化第一次历史性飞跃的成果；中国特色社会主义理论体系是新的飞跃成果，二者一脉相承又与时俱进。','共同的理论主题：<strong>什么是社会主义、怎样建设社会主义；建设什么样的党、怎样建设党；实现什么样的发展、怎样发展</strong>。','<strong>精髓</strong>：解放思想、实事求是、与时俱进、求真务实。','历史地位：指导党和人民沿着中国特色社会主义道路实现中华民族伟大复兴的正确理论，是<strong>立于时代前沿、与时俱进的科学理论</strong>。'],tip:'必考：体系构成、与毛泽东思想的关系、共同主题。'},
+
+    /* --- 阶段 10 --- */
+    {y:'2012.11',k:'theory',s:10,t:'中国梦 · 两个一百年',d:'实现中华民族伟大复兴，是近代以来中华民族最伟大的梦想。',p:['2012 年 11 月 29 日，习近平参观《复兴之路》展览时提出：<strong>实现中华民族伟大复兴，就是中华民族近代以来最伟大的梦想</strong>。','<strong>中国梦的本质：国家富强、民族振兴、人民幸福</strong>；实现途径：<strong>必须走中国道路（中国特色社会主义道路）、弘扬中国精神（以爱国主义为核心的民族精神和以改革创新为核心的时代精神）、凝聚中国力量（全国各族人民大团结的力量）</strong>。','「两个一百年」：到建党一百年时全面建成小康社会（已实现）；到新中国成立一百年时建成<strong>富强民主文明和谐美丽的社会主义现代化强国</strong>。'],tip:'必考：中国梦本质、三个「必须」、两个一百年目标。'},
+    {y:'2013—2016',k:'meeting',s:10,t:'「四个全面」战略布局的形成',d:'新时代治国理政的战略抓手。',p:['<strong>2013 年十八届三中全会</strong>：通过《关于全面深化改革若干重大问题的决定》，提出<strong>全面深化改革总目标是完善和发展中国特色社会主义制度、推进国家治理体系和治理能力现代化</strong>；明确<strong>使市场在资源配置中起决定性作用和更好发挥政府作用</strong>。','<strong>2014 年十八届四中全会</strong>：通过《关于全面推进依法治国若干重大问题的决定》，提出总目标是<strong>建设中国特色社会主义法治体系、建设社会主义法治国家</strong>；12 月 4 日设为国家宪法日。','<strong>2015 年十八届五中全会</strong>：提出<strong>创新、协调、绿色、开放、共享</strong>的新发展理念；审议通过「十三五」规划建议。','<strong>2016 年十八届六中全会</strong>：审议通过《关于新形势下党内政治生活的若干准则》《中国共产党党内监督条例》，<strong>明确习近平同志为党中央的核心、全党的核心</strong>，部署全面从严治党。','「四个全面」：全面建设社会主义现代化国家（原为全面建成小康社会，十九届五中全会调整）、全面深化改革、全面依法治国、全面从严治党。'],tip:'必考：四次全会各自主题、全面深化改革总目标、依法治国总目标、五大发展理念。'},
+    {y:'2017.10',k:'meeting',s:10,t:'中共十九大',d:'中国特色社会主义进入新时代，确立习近平新时代中国特色社会主义思想。',p:['作出<strong>中国特色社会主义进入新时代</strong>的重大政治判断，指出<strong>我国社会主要矛盾已经转化为人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾</strong>。','<strong>把习近平新时代中国特色社会主义思想确立为党必须长期坚持的指导思想并写入党章</strong>（2018 年写入宪法）。','明确<strong>新时代中国共产党的历史使命</strong>：实现中华民族伟大复兴，必须进行伟大斗争、建设伟大工程、推进伟大事业、实现伟大梦想，其中<strong>起决定性作用的是党的建设新的伟大工程</strong>。','提出<strong>分两步走</strong>：从 2020 年到 2035 年基本实现社会主义现代化；从 2035 年到本世纪中叶建成社会主义现代化强国。','提出<strong>新时代党的建设总要求</strong>，突出坚持和加强党的全面领导、坚定不移全面从严治党。'],tip:'必考：新时代、主要矛盾转化、习思想入党章、两步走、「四个伟大」。'},
+    {y:'2017',k:'theory',s:10,t:'「十个明确」「十四个坚持」「十三个方面成就」',d:'习近平新时代中国特色社会主义思想的主要内容（十九届六中全会概括）。',p:['<strong>十个明确</strong>是<strong>核心内容（理论层面的高度概括）</strong>，集中回答新时代坚持和发展什么样的中国特色社会主义、怎样坚持和发展中国特色社会主义等重大时代课题。','<strong>十四个坚持</strong>是<strong>基本方略（实践层面）</strong>：坚持党对一切工作的领导、坚持以人民为中心、坚持全面深化改革、坚持新发展理念、坚持人民当家作主、坚持全面依法治国、坚持社会主义核心价值体系、坚持在发展中保障和改善民生、坚持人与自然和谐共生、坚持总体国家安全观、坚持党对人民军队的绝对领导、坚持「一国两制」和推进祖国统一、坚持推动构建人类命运共同体、坚持全面从严治党。','<strong>十三个方面成就</strong>：分领域总结新时代党和国家事业取得的历史性成就、发生的历史性变革。','三者<strong>有机统一、相互贯通</strong>，共同构成系统完备、逻辑严密、内涵丰富的科学理论体系。'],tip:'必考：十个明确（理论）vs 十四个坚持（方略）的定位区别；十四条的完整表述。'},
+    {y:'2020—2021',k:'event',s:10,t:'脱贫攻坚胜利 · 全面建成小康社会',d:'第一个百年奋斗目标实现，历史性地解决绝对贫困问题。',p:['2020 年底现行标准下农村贫困人口全部脱贫、贫困县全部摘帽、贫困村全部出列，<strong>消除了绝对贫困和区域性整体贫困</strong>。','2021 年 7 月 1 日庆祝中国共产党成立 100 周年大会上，<strong>庄严宣告我国实现了第一个百年奋斗目标、全面建成了小康社会</strong>。','<strong>脱贫攻坚精神</strong>：上下同心、尽锐出战、精准务实、开拓创新、攻坚克难、不负人民。','意义：中华民族千百年来的夙愿变成现实，为全球减贫事业贡献中国方案，<strong>为开启全面建设社会主义现代化国家新征程奠定坚实基础</strong>。'],tip:'高频：脱贫攻坚精神 24 字；全面小康与共同富裕的关系。'},
+    {y:'2021.11',k:'work',s:10,t:'《中共中央关于党的百年奋斗重大成就和历史经验的决议》',d:'党的第三个历史决议，重点总结新时代。',p:['党的百年奋斗<strong>四个历史时期</strong>：新民主主义革命时期、社会主义革命和建设时期、改革开放和社会主义现代化建设新时期、中国特色社会主义新时代；对应<strong>四大伟大成就</strong>。','概括<strong>党百年奋斗的五大历史意义</strong>：从根本上改变了中国人民的前途命运、开辟了实现中华民族伟大复兴的正确道路、展示了马克思主义的强大生命力、深刻影响了世界历史进程、锻造了走在时代前列的中国共产党。','总结<strong>十条历史经验</strong>：坚持党的领导、坚持人民至上、坚持理论创新、坚持独立自主、坚持中国道路、坚持胸怀天下、坚持开拓创新、坚持敢于斗争、坚持统一战线、坚持自我革命。','明确提出<strong>「两个确立」</strong>：确立习近平同志党中央的核心、全党的核心地位，确立习近平新时代中国特色社会主义思想的指导地位，<strong>对新时代党和国家事业发展、对推进中华民族伟大复兴历史进程具有决定性意义</strong>。'],tip:'必考：与前两个历史决议（1945、1981）区分；两个确立的决定性意义；十条历史经验。'},
+    {y:'2022.10',k:'meeting',s:10,t:'中共二十大',d:'以中国式现代化全面推进中华民族伟大复兴。',p:['大会主题：高举中国特色社会主义伟大旗帜，全面贯彻习近平新时代中国特色社会主义思想，团结奋斗全面建设社会主义现代化国家、全面推进中华民族伟大复兴。','提出<strong>习近平新时代中国特色社会主义思想的世界观和方法论，即「六个必须坚持」</strong>：<strong>必须坚持人民至上、必须坚持自信自立、必须坚持守正创新、必须坚持问题导向、必须坚持系统观念、必须坚持胸怀天下</strong>。','系统阐述<strong>中国式现代化</strong>的中国特色、本质要求、重大原则，明确<strong>高质量发展是全面建设社会主义现代化国家的首要任务</strong>。','明确<strong>新时代新征程中国共产党的使命任务</strong>：以中国式现代化全面推进中华民族伟大复兴；强调<strong>「五个必由之路」</strong>与<strong>「三个务必」</strong>（务必不忘初心、牢记使命，务必谦虚谨慎、艰苦奋斗，务必敢于斗争、善于斗争）。','提出<strong>教育、科技、人才</strong>是全面建设社会主义现代化国家的基础性、战略性支撑；强调<strong>全过程人民民主、共同富裕、人与自然和谐共生、国家安全体系、党的自我革命</strong>。'],tip:'必考：六个必须坚持、中国式现代化、三个务必、首要任务（高质量发展）。'},
+    {y:'2024.7',k:'meeting',s:10,t:'二十届三中全会',d:'进一步全面深化改革、推进中国式现代化。',p:['审议通过<strong>《中共中央关于进一步全面深化改革、推进中国式现代化的决定》</strong>。','总目标：继续完善和发展中国特色社会主义制度、推进国家治理体系和治理能力现代化；到 2035 年<strong>全面建成高水平社会主义市场经济体制</strong>。','强调<strong>坚持党的全面领导、坚持以人民为中心、坚持守正创新、坚持以制度建设为主线、坚持全面依法治国、坚持系统观念</strong>等重大原则。','部署<strong>300 多项重要改革举措</strong>，明确到 2029 年建国八十周年时完成改革任务。'],tip:'时政结合点：与十八届三中全会「全面深化改革」对照，注意「进一步」三字。'},
+    {y:'2012—',k:'theory',s:10,t:'习近平新时代中国特色社会主义思想',d:'当代中国马克思主义、二十一世纪马克思主义，中华文化和中国精神的时代精华。',p:['<strong>创立者</strong>：习近平同志是主要创立者；<strong>2017 年十九大确立为指导思想并写入党章，2018 年写入宪法</strong>；2019 年起作为「概论」课程重要内容。','<strong>回答的重大时代课题</strong>：新时代坚持和发展什么样的中国特色社会主义、怎样坚持和发展中国特色社会主义；建设什么样的社会主义现代化强国、怎样建设社会主义现代化强国；建设什么样的长期执政的马克思主义政党、怎样建设长期执政的马克思主义政党。','<strong>世界观和方法论</strong>：「六个必须坚持」；<strong>理论主题</strong>：坚持和发展中国特色社会主义；<strong>理论精髓</strong>：实事求是、人民至上、守正创新。','<strong>历史地位</strong>：马克思主义中国化时代化新的飞跃，<strong>当代中国马克思主义、二十一世纪马克思主义，是中华文化和中国精神的时代精华</strong>，为实现中华民族伟大复兴提供了行动指南，为人类和平与发展贡献了中国智慧。','<strong>两个结合</strong>：把马克思主义基本原理同中国具体实际相结合、同中华优秀传统文化相结合，是推进马克思主义中国化时代化的根本途径。'],tip:'必考：历史地位的完整表述、三个重大时代课题、两个结合、六个必须坚持。'},
+    {y:'核心',k:'concept',s:10,t:'中国式现代化',d:'党领导的社会主义现代化，既有各国现代化共同特征，更有基于国情的中国特色。',p:['<strong>五大特征</strong>：人口规模巨大的现代化、全体人民共同富裕的现代化、物质文明和精神文明相协调的现代化、人与自然和谐共生的现代化、走和平发展道路的现代化。','<strong>本质要求</strong>：坚持中国共产党领导，坚持中国特色社会主义，实现高质量发展，发展全过程人民民主，丰富人民精神世界，实现全体人民共同富裕，促进人与自然和谐共生，推动构建人类命运共同体，创造人类文明新形态。','<strong>重大原则</strong>：坚持和加强党的全面领导、坚持中国特色社会主义道路、坚持以人民为中心的发展思想、坚持深化改革开放、坚持发扬斗争精神。','<strong>根本保证</strong>是中国共产党领导，<strong>首要任务</strong>是高质量发展，<strong>战略安排</strong>是分两步走（2035 基本实现现代化、本世纪中叶建成强国）。'],tip:'必考：五特征、本质要求、重大原则三层内容别混；与西方现代化的比较。'},
+    {y:'速记',k:'concept',s:10,t:'易混概念对照',d:'考纲高频的一组「数字型」表述，集中辨析。',p:['<strong>三个务必</strong>（二十大）：务必不忘初心牢记使命、务必谦虚谨慎艰苦奋斗、务必敢于斗争善于斗争；<strong>两个务必</strong>（七届二中全会）：谦虚谨慎不骄不躁、艰苦奋斗。','<strong>两个确立</strong>：确立习近平同志党中央的核心全党的核心地位，确立习近平新时代中国特色社会主义思想的指导地位；<strong>两个维护</strong>：坚决维护习近平总书记党中央的核心全党的核心地位，坚决维护党中央权威和集中统一领导。','<strong>四个意识</strong>：政治意识、大局意识、核心意识、看齐意识；<strong>四个自信</strong>：道路自信、理论自信、制度自信、文化自信。','<strong>五位一体</strong>（总体布局）：经济、政治、文化、社会、生态文明建设；<strong>四个全面</strong>（战略布局）：全面建设社会主义现代化国家、全面深化改革、全面依法治国、全面从严治党。','<strong>三大法宝</strong>：统一战线、武装斗争、党的建设；<strong>三大作风</strong>：理论联系实际、密切联系群众、批评与自我批评；<strong>毛泽东思想活的灵魂</strong>：实事求是、群众路线、独立自主。','<strong>四次历史性飞跃/转折节点</strong>：1949 新中国成立、1956 社会主义制度确立、1978 改革开放、2012 中国特色社会主义进入新时代（注意与「三次理论飞跃」区分）。'],tip:'选择题最爱在这里设混淆项，建议抄成卡片。'}
+  ];
+
+  /* ==================== 理论体系卡片 ==================== */
+  const THEORY = [
+    {ord:'I',name:'毛泽东思想',meta:'1945 年中共七大确立为党的指导思想 · 1981 年《历史决议》科学评价',rows:[
+      {h:'回答的基本问题',b:'什么是新民主主义革命、怎样进行新民主主义革命；在中国这样一个经济文化落后的国家如何建设社会主义。'},
+      {h:'形成发展',b:'<ul><li><strong>开始形成</strong>：土地革命战争时期，农村包围城市、武装夺取政权道路理论</li><li><strong>走向成熟</strong>：抗日战争时期，新民主主义理论系统阐明</li><li><strong>继续发展</strong>：解放战争时期和新中国成立后，社会主义革命与建设理论</li></ul>'},
+      {h:'活的灵魂',b:'<strong>实事求是、群众路线、独立自主</strong>。实事求是是毛泽东思想的精髓。'},
+      {h:'主要内容',b:'<ul><li>新民主主义革命理论（总路线、三大法宝、农村包围城市道路）</li><li>社会主义革命和社会主义建设理论（人民民主专政、和平改造、正确处理人民内部矛盾、《论十大关系》）</li><li>革命军队建设和军事战略、政策和策略、思想政治工作和文化工作、党的建设理论</li></ul>'},
+      {h:'历史地位',b:'马克思主义中国化时代化的<strong>第一次历史性飞跃</strong>的理论成果；中国革命和建设的科学指南；党和人民的宝贵精神财富，<strong>将长期指导我们的行动</strong>。'},
+      {h:'考研提示',b:'注意把「毛泽东思想」（科学理论体系）与「毛泽东晚年的错误」严格区分；三大法宝、三大作风、活的灵魂三组概念不要混。'}
+    ]},
+    {ord:'II',name:'邓小平理论',meta:'1997 年中共十五大确立为党的指导思想 · 1999 年写入宪法',rows:[
+      {h:'首要的基本理论问题',b:'<strong>什么是社会主义、怎样建设社会主义</strong>。'},
+      {h:'精髓',b:'<strong>解放思想、实事求是</strong>。'},
+      {h:'理论基石',b:'<strong>社会主义初级阶段理论</strong>（1987 年十三大系统阐述）；基本路线「一个中心、两个基本点」。'},
+      {h:'核心论断',b:'<ul><li><strong>社会主义本质</strong>：解放生产力，发展生产力，消灭剥削，消除两极分化，最终达到共同富裕</li><li><strong>三个有利于</strong>判断标准</li><li><strong>社会主义市场经济</strong>：计划与市场不是姓社姓资的本质区别</li><li><strong>发展才是硬道理</strong>；「三步走」战略；「一国两制」</li></ul>'},
+      {h:'历史地位',b:'马克思主义中国化的重要成果，<strong>中国特色社会主义理论体系的奠基之作</strong>，改革开放和社会主义现代化建设的科学指南。'},
+      {h:'考研提示',b:'南方谈话是集大成之作；社会主义本质不含「公有制」「计划经济」等字眼，是易错点。'}
+    ]},
+    {ord:'III',name:'「三个代表」重要思想',meta:'2000 年提出 · 2002 年中共十六大确立为党的指导思想',rows:[
+      {h:'回答的基本问题',b:'<strong>建设什么样的党、怎样建设党</strong>。'},
+      {h:'集中概括',b:'党必须始终代表<strong>中国先进生产力的发展要求、中国先进文化的前进方向、中国最广大人民的根本利益</strong>。'},
+      {h:'贯彻要求',b:'<strong>关键在坚持与时俱进，核心在坚持党的先进性，本质在坚持执政为民</strong>。'},
+      {h:'历史地位',b:'中国特色社会主义理论体系的接续发展；加强和改进党的建设、推进中国特色社会主义事业的强大理论武器。'},
+      {h:'考研提示',b:'「关键/核心/本质」三词对应关系是选择题常考点。'}
+    ]},
+    {ord:'IV',name:'科学发展观',meta:'2003 年十六届三中全会提出 · 2012 年中共十八大确立为党的指导思想',rows:[
+      {h:'回答的基本问题',b:'<strong>新形势下实现什么样的发展、怎样发展</strong>等重大问题。'},
+      {h:'完整表述',b:'<strong>第一要义是发展，核心是以人为本，基本要求是全面协调可持续，根本方法是统筹兼顾</strong>。'},
+      {h:'最鲜明的精神实质',b:'<strong>解放思想、实事求是、与时俱进、求真务实</strong>。'},
+      {h:'相关部署',b:'构建社会主义和谐社会、建设社会主义新农村、建设创新型国家、建设资源节约型环境友好型社会、推动建设和谐世界。'},
+      {h:'考研提示',b:'四句话的顺序和用词不能调换，尤其「核心」「基本要求」「根本方法」。'}
+    ]},
+    {ord:'V',name:'中国特色社会主义理论体系',meta:'2007 年中共十七大首次提出这一科学概念',rows:[
+      {h:'构成',b:'<strong>邓小平理论、「三个代表」重要思想、科学发展观</strong>，以及后续发展的理论成果。<strong>不包括毛泽东思想</strong>。'},
+      {h:'共同主题',b:'什么是社会主义、怎样建设社会主义；建设什么样的党、怎样建设党；实现什么样的发展、怎样发展。'},
+      {h:'精髓',b:'<strong>解放思想、实事求是、与时俱进、求真务实</strong>。'},
+      {h:'与毛泽东思想的关系',b:'一脉相承又与时俱进：都坚持实事求是这一马克思主义活的灵魂，前者是<strong>第一次历史性飞跃</strong>成果，后者是<strong>新的飞跃</strong>成果。'},
+      {h:'历史地位',b:'指导党和人民沿着中国特色社会主义道路实现中华民族伟大复兴的正确理论，是立于时代前沿、与时俱进的科学理论。'},
+      {h:'考研提示',b:'「不包括毛泽东思想」是最经典的错误选项；注意「理论体系」与「理论成果」不是同一层级。'}
+    ]},
+    {ord:'VI',name:'习近平新时代中国特色社会主义思想',meta:'2017 年中共十九大确立为党的指导思想并写入党章 · 2018 年写入宪法 · 2021 年《决议》系统概括',rows:[
+      {h:'回答的重大时代课题',b:'<ul><li>新时代<strong>坚持和发展什么样的中国特色社会主义、怎样坚持和发展中国特色社会主义</strong></li><li><strong>建设什么样的社会主义现代化强国、怎样建设社会主义现代化强国</strong></li><li><strong>建设什么样的长期执政的马克思主义政党、怎样建设长期执政的马克思主义政党</strong></li></ul>'},
+      {h:'主要内容',b:'<strong>十个明确</strong>（理论概括）、<strong>十四个坚持</strong>（基本方略）、<strong>十三个方面成就</strong>，三者有机统一。'},
+      {h:'世界观和方法论',b:'<strong>六个必须坚持</strong>：必须坚持人民至上、自信自立、守正创新、问题导向、系统观念、胸怀天下。'},
+      {h:'根本途径',b:'<strong>「两个结合」</strong>：把马克思主义基本原理同中国具体实际相结合、同中华优秀传统文化相结合。'},
+      {h:'核心要义',b:'坚持和发展中国特色社会主义；<strong>「十个明确」</strong>中最本质的特征与最大优势都是<strong>中国共产党领导</strong>；总任务是以中国式现代化推进中华民族伟大复兴。'},
+      {h:'历史地位',b:'<strong>当代中国马克思主义、二十一世纪马克思主义，是中华文化和中国精神的时代精华</strong>，实现了马克思主义中国化时代化新的飞跃。'},
+      {h:'考研提示',b:'「两个确立」的决定性意义、六个必须坚持、中国式现代化是近年分析题与选择题的双重高频点。'}
+    ]}
+  ];
+
+  /* ==================== 考点速查 ==================== */
+  const QUICK = [
+    {h:'一、新民主主义革命',items:[
+      {t:'总路线',b:'无产阶级领导的，人民大众的，反对帝国主义、封建主义和官僚资本主义的革命。<strong>领导力量</strong>是无产阶级及其政党；<strong>动力</strong>包括无产阶级、农民阶级、城市小资产阶级和民族资产阶级；<strong>对象</strong>是三座大山。'},
+      {t:'三大法宝',b:'<strong>统一战线、武装斗争、党的建设</strong>。统一战线和武装斗争是战胜敌人的两个基本武器，党的组织是掌握这两个武器的英勇战士。'},
+      {t:'三大作风',b:'<strong>理论联系实际、密切联系群众、批评与自我批评</strong>（中共七大概括）。'},
+      {t:'两步走',b:'第一步新民主主义革命，改变半殖民地半封建的社会形态；第二步社会主义革命，建立社会主义社会。<strong>前者是后者的必要准备，后者是前者的必然趋势</strong>；反对「一次革命论」和「二次革命论」。'},
+      {t:'革命道路',b:'<strong>农村包围城市、武装夺取政权</strong>。必要性：内无民主制度、外无民族独立，只能以武装斗争反抗；农民是主力军；敌人长期占据中心城市。可能性：政治经济发展不平衡、国民革命影响、全国革命形势继续向前、有相当力量的正式红军、共产党组织有力量和政策正确。'},
+      {t:'工农武装割据',b:'<strong>土地革命</strong>（基本内容）、<strong>武装斗争</strong>（主要斗争形式）、<strong>农村革命根据地</strong>（战略阵地）三者紧密结合。'}
+    ]},
+    {h:'二、社会主义革命与建设',items:[
+      {t:'过渡时期总路线',b:'「一化三改」「一体两翼」：逐步实现国家的社会主义工业化，逐步实现对农业、手工业、资本主义工商业的社会主义改造。'},
+      {t:'三大改造经验',b:'<ul><li>坚持社会主义工业化建设与社会主义改造<strong>同时并举</strong></li><li>采取<strong>积极引导、逐步过渡</strong>的方式</li><li>对资本主义工商业实行<strong>和平赎买</strong></li></ul>'},
+      {t:'1956 年的意义',b:'社会主义改造基本完成 → <strong>社会主义基本制度全面确立</strong>，中国进入社会主义初级阶段；这是中国历史上最深刻最伟大的社会变革。'},
+      {t:'中共八大主要矛盾',b:'人民对于建立先进的工业国的要求同落后的农业国的现实之间的矛盾；人民对于经济文化迅速发展的需要同当前经济文化不能满足人民需要的状况之间的矛盾。<strong>主要任务是发展生产力</strong>。'},
+      {t:'社会主义社会矛盾理论',b:'《关于正确处理人民内部矛盾的问题》：基本矛盾仍是<strong>生产力和生产关系、经济基础和上层建筑的矛盾</strong>（非对抗性，可依靠制度自身解决）；区分<strong>敌我矛盾（专政）与人民内部矛盾（民主）</strong>；把正确处理人民内部矛盾作为<strong>国家政治生活的主题</strong>。'},
+      {t:'两个历史决议',b:'1945 年《关于若干历史问题的决议》（建党以来特别是六届四中全会至遵义会议）；1981 年《关于建国以来党的若干历史问题的决议》（科学评价毛泽东与毛泽东思想、彻底否定文革）；2021 年《中共中央关于党的百年奋斗重大成就和历史经验的决议》（重点总结新时代）。'}
+    ]},
+    {h:'三、改革开放与初级阶段',items:[
+      {t:'十一届三中全会',b:'1978 年 12 月。<strong>重新确立解放思想、实事求是的思想路线</strong>；停止「以阶级斗争为纲」；<strong>把工作中心转移到经济建设上来、实行改革开放</strong>；形成以邓小平为核心的第二代中央领导集体；是<strong>伟大历史转折</strong>。'},
+      {t:'社会主义初级阶段两层含义',b:'①我国社会<strong>已经是社会主义社会</strong>，必须坚持而不能离开；②我国的社会主义社会<strong>还处在初级阶段</strong>，必须从这个实际出发而不能超越。'},
+      {t:'基本路线',b:'领导和团结全国各族人民，<strong>以经济建设为中心，坚持四项基本原则，坚持改革开放</strong>，自力更生，艰苦创业，为把我国建设成为富强民主文明和谐美丽的社会主义现代化强国而奋斗。'},
+      {t:'四项基本原则',b:'坚持社会主义道路、坚持人民民主专政、坚持中国共产党的领导、坚持马列主义毛泽东思想。<strong>核心是坚持党的领导</strong>。'},
+      {t:'社会主义本质',b:'<strong>解放生产力，发展生产力，消灭剥削，消除两极分化，最终达到共同富裕</strong>（1992 南方谈话）。'},
+      {t:'三个有利于',b:'是否有利于<strong>发展社会主义社会的生产力</strong>、是否有利于<strong>增强社会主义国家的综合国力</strong>、是否有利于<strong>提高人民的生活水平</strong>。'},
+      {t:'三步走',b:'第一步 1981—1990 国民生产总值翻一番解决温饱；第二步到 20 世纪末再翻一番达到小康；第三步到 21 世纪中叶人均国民生产总值达到中等发达国家水平，基本实现现代化。'}
+    ]},
+    {h:'四、新时代核心表述',items:[
+      {t:'十个明确 · 定位',b:'<strong>理论层面的核心概括</strong>，回答「是什么」。首条明确<strong>中国特色社会主义最本质的特征是中国共产党领导，最大优势是中国共产党领导</strong>；总任务是以中国式现代化推进中华民族伟大复兴。'},
+      {t:'十四个坚持 · 定位',b:'<strong>实践层面的基本方略</strong>，回答「怎么做」：坚持党对一切工作的领导、以人民为中心、全面深化改革、新发展理念、人民当家作主、全面依法治国、社会主义核心价值体系、在发展中保障和改善民生、人与自然和谐共生、总体国家安全观、党对人民军队的绝对领导、「一国两制」和推进祖国统一、推动构建人类命运共同体、全面从严治党。'},
+      {t:'六个必须坚持',b:'<strong>必须坚持人民至上、自信自立、守正创新、问题导向、系统观念、胸怀天下</strong>（党的二十大报告提出，是习近平新时代中国特色社会主义思想的世界观和方法论）。'},
+      {t:'新时代主要矛盾',b:'<strong>人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾</strong>（2017 十九大）。注意「我国仍处于并将长期处于社会主义初级阶段的基本国情没有变」「我国是世界最大发展中国家的国际地位没有变」。'},
+      {t:'两个确立 / 两个维护',b:'<strong>两个确立</strong>：确立习近平同志党中央的核心、全党的核心地位；确立习近平新时代中国特色社会主义思想的指导地位。<strong>两个维护</strong>：坚决维护习近平总书记党中央的核心、全党的核心地位；坚决维护党中央权威和集中统一领导。<strong>两个确立对新时代党和国家事业发展、对推进中华民族伟大复兴历史进程具有决定性意义</strong>。'},
+      {t:'四个意识 / 四个自信',b:'<strong>四个意识</strong>：政治意识、大局意识、核心意识、看齐意识。<strong>四个自信</strong>：道路自信、理论自信、制度自信、文化自信（<strong>文化自信是更基础、更广泛、更深厚的自信</strong>）。'},
+      {t:'五位一体 / 四个全面',b:'<strong>五位一体总体布局</strong>：经济、政治、文化、社会、生态文明建设。<strong>四个全面战略布局</strong>：全面建设社会主义现代化国家、全面深化改革、全面依法治国、全面从严治党。'},
+      {t:'新发展理念 / 格局',b:'<strong>创新、协调、绿色、开放、共享</strong>；<strong>以国内大循环为主体、国内国际双循环相互促进</strong>的新发展格局；<strong>高质量发展是全面建设社会主义现代化国家的首要任务</strong>。'},
+      {t:'两个务必 / 三个务必',b:'<strong>两个务必</strong>（1949 七届二中全会）：务必使同志们继续地保持谦虚、谨慎、不骄、不躁的作风；务必使同志们继续地保持艰苦奋斗的作风。<strong>三个务必</strong>（2022 二十大）：务必不忘初心、牢记使命；务必谦虚谨慎、艰苦奋斗；务必敢于斗争、善于斗争。'},
+      {t:'十大历史经验',b:'坚持党的领导、坚持人民至上、坚持理论创新、坚持独立自主、坚持中国道路、坚持胸怀天下、坚持开拓创新、坚持敢于斗争、坚持统一战线、坚持<strong>自我革命</strong>。'}
+    ]},
+    {h:'五、中国式现代化',items:[
+      {t:'五大特征',b:'<ol><li>人口规模巨大的现代化</li><li>全体人民共同富裕的现代化</li><li>物质文明和精神文明相协调的现代化</li><li>人与自然和谐共生的现代化</li><li>走和平发展道路的现代化</li></ol>'},
+      {t:'本质要求',b:'坚持中国共产党领导，坚持中国特色社会主义，实现高质量发展，发展全过程人民民主，丰富人民精神世界，实现全体人民共同富裕，促进人与自然和谐共生，推动构建人类命运共同体，<strong>创造人类文明新形态</strong>。'},
+      {t:'重大原则',b:'坚持和加强党的全面领导、坚持中国特色社会主义道路、坚持以人民为中心的发展思想、坚持深化改革开放、坚持发扬斗争精神。'},
+      {t:'战略安排',b:'<strong>两步走</strong>：2020—2035 年基本实现社会主义现代化；2035 年到本世纪中叶建成富强民主文明和谐美丽的社会主义现代化强国。'},
+      {t:'经济制度基础',b:'<strong>公有制为主体、多种所有制经济共同发展；按劳分配为主体、多种分配方式并存；社会主义市场经济体制</strong>等社会主义基本经济制度；「两个毫不动摇」；使市场在资源配置中起决定性作用，更好发挥政府作用。'},
+      {t:'全过程人民民主',b:'<strong>最广泛、最真实、最管用</strong>的社会主义民主；人民代表大会制度是根本政治制度；中国共产党领导的多党合作和政治协商制度、民族区域自治制度、基层群众自治制度是基本政治制度。'}
+    ]}
+  ];
+
+  /* ==================== 渲染 ==================== */
+  const $ = s => document.querySelector(s);
+  const $$ = (s,root) => Array.from((root||document).querySelectorAll(s));
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  document.getElementById('stNodes').textContent = N.length;
+
+  // 目录
+  $('#tocList').innerHTML = STAGES.map((st,i)=>
+    `<a href="#phase-${st.id}" data-i="${i}"><span>${st.span}</span>${String(i+1).padStart(2,'0')} ${st.name}</a>`
+  ).join('');
+
+  // 时间轴
+  $('#trackRoot').innerHTML = STAGES.map((st,i)=>{
+    const nodes = N.map((n,idx)=>({n,idx})).filter(o=>o.n.s===st.id);
+    return `<section class="phase" id="phase-${st.id}" data-phase="${st.id}">
+      <div class="phase-head">
+        <div class="phase-num">STAGE ${String(i+1).padStart(2,'0')}</div>
+        <h2 class="phase-title serif">${st.name}<em>${st.span}</em></h2>
+        <p class="phase-desc">${st.desc}</p>
+      </div>
+      <div class="track">
+        ${nodes.map(({n,idx})=>`<article class="node" data-i="${idx}" data-k="${n.k}" style="--c:${C[n.k]}">
+          <div class="node-card">
+            <div class="node-head">
+              <div class="node-year">${n.y}</div>
+              <div class="node-main">
+                <div class="node-title"><span class="badge">${KN[n.k]}</span>${n.t}</div>
+                <p class="node-sum">${n.d}</p>
+              </div>
+              <div class="chev">▶</div>
+            </div>
+            <div class="node-detail">
+              <ul>${n.p.map(x=>`<li>${x}</li>`).join('')}</ul>
+              ${n.tip?`<div class="tip"><b>考纲提示</b>${n.tip}</div>`:''}
+            </div>
+          </div>
+        </article>`).join('')}
+      </div>
+    </section>`;
+  }).join('');
+
+  // 理论体系
+  $('#theoryGrid').innerHTML = THEORY.map(t=>`
+    <article class="tcard">
+      <div class="ord">THEORY ${t.ord}</div>
+      <h3 class="serif">${t.name}</h3>
+      <div class="meta">${t.meta}</div>
+      ${t.rows.map(r=>`<dl class="trow"><dt>${r.h}</dt><dd>${r.b}</dd></dl>`).join('')}
+    </article>`).join('');
+
+  // 考点速查
+  $('#quickRoot').innerHTML = QUICK.map(g=>`
+    <section class="qgroup">
+      <h3 class="serif">${g.h}</h3>
+      <div class="qgrid">${g.items.map(i=>`<div class="qitem"><h4>${i.t}</h4><p>${i.b}</p></div>`).join('')}</div>
+    </section>`).join('');
+
+  /* ==================== 交互 ==================== */
+  // Tab
+  $$('.tab').forEach(t=>t.addEventListener('click',()=>{
+    $$('.tab').forEach(x=>x.classList.toggle('on',x===t));
+    $$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+t.dataset.v));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }));
+
+  // 视图直达 + 展开全部：?tab=theory / ?open=1
+  const params = new URLSearchParams(location.search);
+  const initTab = params.get('tab');
+  if(initTab==='theory'||initTab==='quick'){
+    $$('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===initTab));
+    $$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+initTab));
+  }
+  if(params.get('open')==='1'){
+    $$('.node').forEach(n=>n.classList.add('open'));
+    $('#toggleAll').textContent='收起全部';
+  }
+
+  // 展开 / 收起
+  $('#trackRoot').addEventListener('click',e=>{
+    const h = e.target.closest('.node-head');
+    if(h) h.parentNode.parentNode.classList.toggle('open');
+  });
+  let allOpen=false;
+  $('#toggleAll').addEventListener('click',()=>{
+    allOpen=!allOpen;
+    $$('.node').forEach(n=>n.classList.toggle('open',allOpen));
+    $('#toggleAll').textContent = allOpen?'收起全部':'展开全部';
+  });
+
+  // 筛选 + 搜索
+  let curK='all';
+  function applyFilter(){
+    const q = $('#q').value.trim().toLowerCase();
+    let total=0;
+    $$('.phase').forEach(ph=>{
+      let vis=0;
+      $$('.node',ph).forEach(node=>{
+        const i=+node.dataset.i, n=N[i];
+        const okK = curK==='all'||n.k===curK;
+        const hay = (n.y+' '+n.t+' '+n.d+' '+n.p.join(' ')+' '+(n.tip||'')).toLowerCase();
+        const okQ = !q||hay.includes(q);
+        const show = okK&&okQ;
+        node.style.display = show?'':'none';
+        if(show){vis++;total++;}
+        if(q&&show&&!node.classList.contains('open')) node.classList.add('open');
+      });
+      ph.style.display = vis?'':'none';
+    });
+    let empty=$('#emptyMsg');
+    if(!total){
+      if(!empty){
+        empty=document.createElement('div');empty.id='emptyMsg';empty.className='empty';
+        empty.textContent='没有匹配的知识点，换个关键词试试。';
+        $('#trackRoot').appendChild(empty);
+      }
+      empty.style.display='';
+    }else if(empty) empty.style.display='none';
+  }
+  $$('.chip').forEach(c=>c.addEventListener('click',()=>{
+    curK=c.dataset.k;
+    $$('.chip').forEach(x=>x.classList.toggle('on',x===c));
+    applyFilter();
+  }));
+  $('#q').addEventListener('input',applyFilter);
+
+  // 目录高亮
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>{
+      es.forEach(en=>{
+        if(en.isIntersecting){
+          const id=en.target.dataset.phase;
+          $$('.toc a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#phase-'+id));
+        }
+      });
+    },{rootMargin:'-90px 0px -65% 0px',threshold:0});
+    $$('.phase').forEach(p=>io.observe(p));
+  }
+})();
+</script>
+</body>
+</html>
